@@ -1,178 +1,129 @@
-# 📚 100-Day Learning Journey - Syllabus Tracker
+# 📚 100-Day Syllabus Tracker
 
-A responsive web application for tracking your educational syllabus completion across 100 days. Perfect for students managing multiple subjects, with support for both college curriculum and personal learning goals.
+A sharp, professional web app for tracking your college syllabus completion in 100 days. Built for parallel study across multiple subjects with cross-device cloud sync.
 
-## 🌟 Features
+**🔗 Live:** [dev-lahrani.github.io/probable-octo-chainsaw](https://dev-lahrani.github.io/probable-octo-chainsaw/)
 
-- **📊 Progress Tracking**: Visual progress bars for overall and per-subject completion
-- **📅 Daily Focus**: See what topics are scheduled for today
-- **🎯 100-Day Schedule Grid**: Bird's eye view of your entire journey
-- **📱 Fully Responsive**: Works on desktop, tablet, and mobile
-- **💾 Local Storage**: Progress saves automatically in your browser
-- **🔍 Filters**: Filter by subject, day, priority, or completion status
-- **🌓 Dark/Light Mode**: Automatically adapts to your system preference
-- **📤 Export/Import**: Backup your progress data
+---
 
-## 📖 Subjects Covered
+## ✨ Features
 
-### College Syllabus (High Priority)
-| Subject | Hours | Days |
-|---------|-------|------|
-| Theory of Computation (TOC) | 28h | Day 1-28 |
-| Operating Systems (OS) | 28h | Day 29-50 |
-| Software Engineering (SE) | 27h | Day 51-66 |
-| Data Structures (DS) | 30h | Day 67-87 |
-| Mobile App Development (MAD) | 20h | Throughout |
+| Feature | Description |
+|---------|-------------|
+| **📊 Progress Tracking** | Visual progress bars for overall and per-subject completion |
+| **📅 Parallel Study** | All subjects distributed together, not sequentially |
+| **☁️ Cloud Sync** | Sync progress across devices via JSONBin.io (no signup required) |
+| **🔥 Streak Counter** | Track consecutive days of study |
+| **📱 Responsive** | Works on desktop, tablet, and mobile |
+| **⌨️ Keyboard Shortcuts** | Quick actions with ?, S, E, Esc |
+| **💾 Export/Import** | Backup and restore your progress |
+| **🎯 100-Day Grid** | Bird's eye view of your entire journey |
+
+---
+
+## 📖 Subjects
+
+### College (High Priority)
+- **TOC** - Theory of Computation
+- **OS** - Operating Systems  
+- **SE** - Software Engineering
+- **DS** - Data Structures
+- **MAD** - Mobile App Development
 
 ### Personal Learning
-| Subject | Hours | Days |
-|---------|-------|------|
-| C++ & Git/GitHub Fundamentals | 15h | Throughout |
-| Cybersecurity Basics | 20h | Throughout (slow pace) |
+- **Basics** - C++, Git, GitHub fundamentals
+- **CyberSec** - Cybersecurity basics (slow pace)
 
-## 📆 Schedule Overview
+---
 
-- **Total Duration**: 100 days (January 5 - April 15, 2026)
-- **Daily Study**: ~4 hours maximum
-- **Buffer Days**: 12 catch-up days for missed topics or revision
-  - Days: 7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 91
+## ☁️ Cloud Sync
 
-## 🚀 Deployment on GitHub Pages
+Sync your progress across multiple devices using free JSONBin.io storage.
 
-### Step 1: Create a GitHub Repository
+### First Device (Create)
+1. Click **"Create New"** in the Cloud Sync section
+2. A unique Bin ID is generated and **copied to your clipboard**
+3. Save this ID somewhere safe
 
-1. Go to [GitHub](https://github.com) and log in
-2. Click the **+** icon → **New repository**
-3. Name it: `syllabus-tracker` (or any name you prefer)
-4. Make it **Public** (required for free GitHub Pages)
-5. Click **Create repository**
+### Other Devices (Connect)
+1. Paste your Bin ID into the input field
+2. Click **"Connect"**
+3. Your progress syncs automatically
 
-### Step 2: Upload Your Files
+### Multiple Users
+- **Separate progress**: Each person creates their own Bin ID
+- **Shared progress**: Share the same Bin ID to collaborate
 
-**Option A: Using Git Command Line**
-```bash
-# Navigate to your project folder
-cd "/home/dev-lahrani/Desktop/Projects/Syllabus to do completion list"
+---
 
-# Initialize git repository
-git init
+## ⌨️ Keyboard Shortcuts
 
-# Add all files
-git add .
+| Key | Action |
+|-----|--------|
+| ? | Show help modal |
+| S | Sync to cloud |
+| E | Export backup |
+| Esc | Close modals |
 
-# Commit the files
-git commit -m "Initial commit: Syllabus tracker"
-
-# Add your GitHub repository as remote
-git remote add origin https://github.com/YOUR_USERNAME/syllabus-tracker.git
-
-# Push to GitHub
-git branch -M main
-git push -u origin main
-```
-
-**Option B: Using GitHub Web Interface**
-1. In your new repository, click **Add file** → **Upload files**
-2. Drag and drop all project files
-3. Click **Commit changes**
-
-### Step 3: Enable GitHub Pages
-
-1. Go to your repository on GitHub
-2. Click **Settings** (gear icon)
-3. Scroll down to **Pages** in the left sidebar
-4. Under **Source**, select **Deploy from a branch**
-5. Select **main** branch and **/ (root)** folder
-6. Click **Save**
-
-### Step 4: Access Your Site
-
-After a few minutes, your site will be live at:
-```
-https://YOUR_USERNAME.github.io/syllabus-tracker/
-```
+---
 
 ## 📁 Project Structure
 
 ```
-syllabus-tracker/
-├── index.html          # Main HTML file
+├── index.html          # Main HTML
+├── favicon.svg         # Diamond favicon
 ├── css/
-│   └── style.css       # Responsive styles
+│   └── style.css       # Sharp dark theme
 ├── js/
-│   └── app.js          # Application logic
+│   └── app.js          # App logic + cloud sync
 ├── data/
-│   └── syllabus.json   # Syllabus data structure
-└── README.md           # This file
+│   └── syllabus.json   # 100-day schedule
+└── README.md
 ```
-
-## 🔧 Customization
-
-### Changing Start Date
-Edit `data/syllabus.json`:
-```json
-"metadata": {
-    "startDate": "2026-01-05",  // Change this
-    ...
-}
-```
-
-### Adding New Subjects
-Add a new object to the `subjects` array in `data/syllabus.json`:
-```json
-{
-    "id": "new-subject",
-    "name": "New Subject Name",
-    "shortName": "NS",
-    "color": "#hex-color",
-    "totalHours": 20,
-    "priority": "high|medium|low",
-    "units": [...]
-}
-```
-
-### Modifying Buffer Days
-Edit the `bufferDays` array in `data/syllabus.json`:
-```json
-"schedule": {
-    "bufferDays": [7, 14, 21, ...]
-}
-```
-
-## 💡 Tips for Success
-
-1. **Be Consistent**: Try to complete topics daily, even if just a few
-2. **Use Buffer Days**: If you miss something, catch up on buffer days
-3. **Track Progress**: Check off topics as you complete them
-4. **Review Weekly**: Use the "This Week" filter to plan ahead
-5. **Prioritize**: Focus on college subjects (high priority) first
-6. **Cybersecurity**: This is your interest subject - go at your own pace!
-
-## 🔒 Data Privacy
-
-- All progress data is stored **locally** in your browser
-- No data is sent to any server
-- Use the export feature to backup your progress
-- Data persists across browser sessions
-
-## 📱 Mobile Usage
-
-The site is fully responsive! Access it from your phone's browser and:
-- Bookmark it for quick access
-- Add to home screen for app-like experience (PWA-ready)
-
-## 🛠️ Technical Details
-
-- **Pure HTML/CSS/JS** - No frameworks required
-- **LocalStorage API** - For data persistence
-- **CSS Grid & Flexbox** - For responsive layouts
-- **CSS Variables** - For easy theming
-- **Fetch API** - For loading syllabus data
-
-## 📄 License
-
-This project is open source. Feel free to modify and use it for your learning journey!
 
 ---
 
-**Good luck with your studies! 🎓 You've got this! 💪**
+## 🚀 Self-Hosting
+
+### GitHub Pages
+1. Fork this repository
+2. Go to **Settings → Pages**
+3. Set source to **main** branch
+4. Access at `https://YOUR_USERNAME.github.io/REPO_NAME/`
+
+### Local Development
+```bash
+# Clone the repo
+git clone https://github.com/Dev-Lahrani/probable-octo-chainsaw.git
+cd probable-octo-chainsaw
+
+# Serve locally (Python 3)
+python -m http.server 8080
+
+# Open http://localhost:8080
+```
+
+---
+
+## 📆 Schedule Info
+
+- **Duration**: 100 days (Jan 5 - Apr 15, 2026)
+- **Daily Study**: ~4 hours max
+- **Buffer Days**: 12 catch-up days (7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 91)
+- **Study Style**: Parallel (all subjects together throughout)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Pure HTML/CSS/JS (no frameworks)
+- **Cloud Storage**: JSONBin.io (free tier)
+- **Hosting**: GitHub Pages
+- **Fonts**: Inter + JetBrains Mono
+- **Theme**: Sharp dark (#0a0a0f, #00d4ff cyan accent)
+
+---
+
+## 📝 License
+
+MIT - Use it however you want.
