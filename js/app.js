@@ -51,7 +51,7 @@ function saveLocalData() {
     localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
 }
 
-// ===== Cloud Sync Functions (JSONBin.io) =====
+// ===== Cloud Sync Functions (JSONBlob.com - free, no API key) =====
 async function attemptCloudSync() {
     if (!syncConfig.binId) return;
     
@@ -78,23 +78,14 @@ async function attemptCloudSync() {
 async function fetchFromCloud() {
     if (!syncConfig.binId) return null;
     
-    const headers = {
-        'Content-Type': 'application/json'
-    };
-    
-    if (syncConfig.apiKey) {
-        headers['X-Master-Key'] = syncConfig.apiKey;
-    }
-    
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${syncConfig.binId}/latest`, {
+        const response = await fetch(`https://jsonblob.com/api/jsonBlob/${syncConfig.binId}`, {
             method: 'GET',
-            headers
+            headers: { 'Content-Type': 'application/json' }
         });
         
         if (response.ok) {
-            const data = await response.json();
-            return data.record;
+            return await response.json();
         }
     } catch (error) {
         console.error('Fetch from cloud failed:', error);
@@ -107,18 +98,10 @@ async function saveToCloud() {
     
     updateSyncStatus('syncing');
     
-    const headers = {
-        'Content-Type': 'application/json'
-    };
-    
-    if (syncConfig.apiKey) {
-        headers['X-Master-Key'] = syncConfig.apiKey;
-    }
-    
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${syncConfig.binId}`, {
+        const response = await fetch(`https://jsonblob.com/api/jsonBlob/${syncConfig.binId}`, {
             method: 'PUT',
-            headers,
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 completion: completionData,
                 lastUpdated: new Date().toISOString()
@@ -142,20 +125,10 @@ async function saveToCloud() {
 async function createNewBin() {
     updateSyncStatus('syncing');
     
-    const headers = {
-        'Content-Type': 'application/json',
-        'X-Bin-Private': 'false'
-    };
-    
-    if (syncConfig.apiKey) {
-        headers['X-Master-Key'] = syncConfig.apiKey;
-        headers['X-Bin-Private'] = 'true';
-    }
-    
     try {
-        const response = await fetch('https://api.jsonbin.io/v3/b', {
+        const response = await fetch('https://jsonblob.com/api/jsonBlob', {
             method: 'POST',
-            headers,
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 completion: completionData,
                 lastUpdated: new Date().toISOString()
@@ -163,13 +136,15 @@ async function createNewBin() {
         });
         
         if (response.ok) {
-            const data = await response.json();
-            syncConfig.binId = data.metadata.id;
+            // JSONBlob returns the blob ID in the Location header
+            const location = response.headers.get('Location');
+            const binId = location.split('/').pop();
+            syncConfig.binId = binId;
             syncConfig.lastSync = new Date().toISOString();
             saveLocalData();
             updateSyncStatus('synced');
             updateSyncUI();
-            return data.metadata.id;
+            return binId;
         }
     } catch (error) {
         console.error('Create bin failed:', error);
