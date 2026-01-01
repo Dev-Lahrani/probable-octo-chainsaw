@@ -230,6 +230,7 @@ function getDaysLeft() {
 function initializeApp() {
     updateHeaderStats();
     updateOverallProgress();
+    updateStreakCounter();
     populateFilters();
     renderTodaySection();
     renderSubjectCards();
@@ -239,6 +240,45 @@ function initializeApp() {
     if (!syncConfig.binId) {
         updateSyncStatus('local');
     }
+}
+
+function updateStreakCounter() {
+    const streak = calculateStreak();
+    const streakEl = document.getElementById('streakCount');
+    if (streakEl) {
+        streakEl.textContent = streak > 0 ? `${streak}🔥` : '0';
+    }
+}
+
+function calculateStreak() {
+    // Calculate streak based on consecutive days with at least one completion
+    // Group completions by day
+    const completionsByDay = {};
+    
+    syllabusData.subjects.forEach(subject => {
+        subject.units.forEach(unit => {
+            unit.topics.forEach(topic => {
+                if (completionData[topic.id]) {
+                    const day = topic.day;
+                    completionsByDay[day] = true;
+                }
+            });
+        });
+    });
+    
+    // Count streak from current day backwards
+    const currentDay = getCurrentDay();
+    let streak = 0;
+    
+    for (let day = currentDay; day >= 1; day--) {
+        if (completionsByDay[day]) {
+            streak++;
+        } else {
+            break;
+        }
+    }
+    
+    return streak;
 }
 
 function updateHeaderStats() {
@@ -494,6 +534,7 @@ async function toggleTopic(topicId) {
     // Update UI
     updateCheckbox(topicId);
     updateOverallProgress();
+    updateStreakCounter();
     renderSubjectCards();
     renderScheduleGrid();
     
@@ -590,8 +631,29 @@ function setupEventListeners() {
         if (e.target.id === 'subjectModal') closeModal();
     });
     
+    // Help modal close
+    document.getElementById('helpModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'helpModal') closeHelpModal();
+    });
+    
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') {
+            closeModal();
+            closeHelpModal();
+        }
+        // Keyboard shortcuts
+        if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+            e.preventDefault();
+            toggleHelpModal();
+        }
+        if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.metaKey && !e.target.matches('input, textarea')) {
+            e.preventDefault();
+            document.getElementById('syncNowBtn')?.click();
+        }
+        if (e.key.toLowerCase() === 'e' && !e.ctrlKey && !e.metaKey && !e.target.matches('input, textarea')) {
+            e.preventDefault();
+            exportProgress();
+        }
     });
     
     // Filters
@@ -639,6 +701,30 @@ function setupEventListeners() {
             alert('Set up cloud sync first.');
         }
     });
+    
+    // Export/Import
+    document.getElementById('exportBtn')?.addEventListener('click', exportProgress);
+    document.getElementById('importFile')?.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            importProgress(e.target.files[0]);
+            e.target.value = ''; // Reset for future imports
+        }
+    });
+}
+
+// Help modal functions
+function toggleHelpModal() {
+    const modal = document.getElementById('helpModal');
+    if (modal) {
+        modal.classList.toggle('active');
+    }
+}
+
+function closeHelpModal() {
+    const modal = document.getElementById('helpModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
 }
 
 function applyDayFilter() {

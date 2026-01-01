@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="description" content="100-Day Syllabus Tracker - Track your college syllabus completion">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SYLLABUS // 100 DAYS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +32,10 @@
                     <div class="stat-item">
                         <span class="stat-value" id="daysLeft">100</span>
                         <span class="stat-label">Left</span>
+                    </div>
+                    <div class="stat-item streak">
+                        <span class="stat-value" id="streakCount">0🔥</span>
+                        <span class="stat-label">Streak</span>
                     </div>
                     <div class="sync-status">
                         <span class="sync-indicator" id="syncIndicator"></span>
@@ -99,6 +109,8 @@
                     <button class="btn" id="connectBinBtn">Connect</button>
                     <button class="btn btn-primary" id="createBinBtn">Create New</button>
                     <button class="btn" id="syncNowBtn">Sync Now</button>
+                    <button class="btn" id="exportBtn">↓ Export</button>
+                    <label class="btn" style="cursor:pointer">↑ Import<input type="file" id="importFile" accept=".json" style="display:none"></label>
                 </div>
             </div>
         </div>
@@ -149,9 +161,27 @@
     <footer class="footer">
         <div class="container">
             <p>Stay consistent. Stay focused.</p>
-            <p class="footer-note">Progress syncs to cloud when connected.</p>
+            <p class="footer-note">Progress syncs to cloud when connected. • <kbd>Esc</kbd> close modal • <kbd>?</kbd> keyboard help</p>
         </div>
     </footer>
+
+    <!-- Keyboard shortcuts modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Keyboard Shortcuts</h2>
+                <button class="modal-close" onclick="document.getElementById('helpModal').classList.remove('active')">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:grid;gap:0.5rem;">
+                    <div style="display:flex;justify-content:space-between;"><kbd>Esc</kbd> <span>Close modal</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>?</kbd> <span>Show this help</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>S</kbd> <span>Sync now</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>E</kbd> <span>Export data</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

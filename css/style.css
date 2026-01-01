@@ -892,3 +892,117 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
 }
+
+/* ===== Streak Counter ===== */
+.stat-item.streak .stat-value {
+    color: #ff6b35;
+    animation: pulse-fire 2s ease-in-out infinite;
+}
+
+@keyframes pulse-fire {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* ===== Export/Import Buttons ===== */
+.sync-section .btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+}
+
+#exportBtn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+}
+
+#exportBtn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.import-label {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.import-label:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+#importFile {
+    display: none;
+}
+
+/* ===== Keyboard Shortcuts Modal ===== */
+.help-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.help-modal.active {
+    display: flex;
+}
+
+.help-modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+}
+
+.help-modal-content h3 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+.shortcut-list {
+    list-style: none;
+}
+
+.shortcut-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.shortcut-list li:last-child {
+    border-bottom: none;
+}
+
+kbd {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 0.2rem 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--primary);
+}
+
+.footer-hint {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.footer-hint kbd {
+    font-size: 0.65rem;
+}
