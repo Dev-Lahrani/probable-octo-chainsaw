@@ -679,7 +679,13 @@ function setupEventListeners() {
     document.getElementById('createBinBtn')?.addEventListener('click', async () => {
         const binId = await createNewBin();
         if (binId) {
-            alert(`Sync enabled! Your Bin ID:\n\n${binId}\n\nSave this ID to sync on other devices.`);
+            // Copy to clipboard
+            try {
+                await navigator.clipboard.writeText(binId);
+                alert(`Sync enabled! Your Bin ID:\n\n${binId}\n\n✓ Copied to clipboard!\nPaste this ID on other devices to sync.`);
+            } catch {
+                alert(`Sync enabled! Your Bin ID:\n\n${binId}\n\nCopy this ID to sync on other devices.`);
+            }
         }
     });
     
