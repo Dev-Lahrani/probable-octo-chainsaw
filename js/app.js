@@ -11,10 +11,22 @@ const QUIZ_ATTEMPTS_KEY = 'syllabus_quiz_attempts';
 let currentQuiz = {
     topicId: null,
     questions: [],
+    shuffledOptions: [], // Store shuffled options with original answer mapping
     currentIndex: 0,
     answers: [],
     correct: 0,
     wrong: 0
+};
+
+// Analytics data
+const ANALYTICS_KEY = 'syllabus_analytics';
+let analyticsData = {
+    totalQuizzesTaken: 0,
+    totalQuestionAnswered: 0,
+    correctByDifficulty: { easy: 0, medium: 0, hard: 0 },
+    totalByDifficulty: { easy: 0, medium: 0, hard: 0 },
+    topicAttempts: {},
+    studyTime: 0
 };
 
 // JSONBin.io configuration (free, no signup required for public bins)
@@ -93,12 +105,19 @@ function loadLocalData() {
     if (quizStored) {
         quizAttempts = JSON.parse(quizStored);
     }
+    
+    // Load analytics
+    const analyticsStored = localStorage.getItem(ANALYTICS_KEY);
+    if (analyticsStored) {
+        analyticsData = { ...analyticsData, ...JSON.parse(analyticsStored) };
+    }
 }
 
 function saveLocalData() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(completionData));
     localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
     localStorage.setItem(QUIZ_ATTEMPTS_KEY, JSON.stringify(quizAttempts));
+    localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analyticsData));
 }
 
 // ===== Cloud Sync Functions (JSONBin.io) =====
@@ -705,7 +724,31 @@ function setupEventListeners() {
             closeTopicModal();
             // Don't close quiz modal on escape to prevent accidental exit
         }
-        // Keyboard shortcuts
+        
+        // Quiz keyboard shortcuts (1-4 for options, Enter to submit)
+        const quizModal = document.getElementById('quizModal');
+        if (quizModal?.classList.contains('active')) {
+            const options = document.querySelectorAll('.quiz-option:not(.disabled)');
+            if (options.length > 0) {
+                if (e.key >= '1' && e.key <= '4') {
+                    e.preventDefault();
+                    const index = parseInt(e.key) - 1;
+                    if (index < options.length) {
+                        selectQuizOption(index);
+                    }
+                }
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const submitBtn = document.getElementById('submitAnswerBtn');
+                    if (submitBtn && !submitBtn.disabled) {
+                        submitBtn.click();
+                    }
+                }
+            }
+            return; // Don't process other shortcuts during quiz
+        }
+        
+        // General keyboard shortcuts
         if (e.key === '?' || (e.shiftKey && e.key === '/')) {
             e.preventDefault();
             toggleHelpModal();
@@ -717,6 +760,10 @@ function setupEventListeners() {
         if (e.key.toLowerCase() === 'e' && !e.ctrlKey && !e.metaKey && !e.target.matches('input, textarea')) {
             e.preventDefault();
             exportProgress();
+        }
+        if (e.key.toLowerCase() === 'a' && !e.ctrlKey && !e.metaKey && !e.target.matches('input, textarea')) {
+            e.preventDefault();
+            openAnalyticsModal();
         }
     });
     
@@ -1031,7 +1078,6 @@ function startQuiz(topicId) {
     const topicQuestions = questionsData?.topicQuestions?.[topicId]?.questions || questionsData?.defaultQuestions?.questions;
     
     if (!topicQuestions || topicQuestions.length < 10) {
-        // Generate more questions if needed by duplicating and shuffling
         alert('Quiz questions are being prepared. Please try again.');
         return;
     }
@@ -1054,18 +1100,34 @@ function startQuiz(topicId) {
         selectedQuestions.push(remaining[0]);
     }
     
-    // Shuffle the final selection
-    const shuffledQuestions = shuffleArray(selectedQuestions);
+    // Shuffle the final selection of questions
+    const shuffledQuestions = shuffleArray(selectedQuestions).slice(0, 10);
+    
+    // Shuffle options for each question and track correct answer
+    const shuffledOptions = shuffledQuestions.map(q => {
+        const optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+        const shuffled = shuffleArray(optionsWithIndex);
+        const newCorrectIndex = shuffled.findIndex(opt => opt.originalIndex === q.answer);
+        return {
+            options: shuffled.map(opt => opt.text),
+            correctIndex: newCorrectIndex
+        };
+    });
     
     // Initialize quiz state
     currentQuiz = {
         topicId,
-        questions: shuffledQuestions.slice(0, 10),
+        questions: shuffledQuestions,
+        shuffledOptions,
         currentIndex: 0,
         answers: [],
         correct: 0,
         wrong: 0
     };
+    
+    // Update analytics
+    analyticsData.totalQuizzesTaken++;
+    saveLocalData();
     
     renderQuizQuestion();
     document.getElementById('quizModal').classList.add('active');
@@ -1078,6 +1140,7 @@ function renderQuizQuestion() {
     
     const topicInfo = findTopicById(currentQuiz.topicId);
     const question = currentQuiz.questions[currentQuiz.currentIndex];
+    const shuffledOpts = currentQuiz.shuffledOptions[currentQuiz.currentIndex];
     const questionNum = currentQuiz.currentIndex + 1;
     const totalQuestions = currentQuiz.questions.length;
     
@@ -1101,13 +1164,14 @@ function renderQuizQuestion() {
             <span class="quiz-difficulty ${question.difficulty}">${question.difficulty}</span>
             <div class="quiz-question-text">${question.question}</div>
             <div class="quiz-options">
-                ${question.options.map((option, index) => `
+                ${shuffledOpts.options.map((option, index) => `
                     <div class="quiz-option" data-index="${index}" onclick="selectQuizOption(${index})">
-                        <div class="quiz-option-marker">${String.fromCharCode(65 + index)}</div>
+                        <div class="quiz-option-marker">${index + 1}</div>
                         <div class="quiz-option-text">${option}</div>
                     </div>
                 `).join('')}
             </div>
+            <div class="quiz-keyboard-hint">Press 1-4 to select, Enter to submit</div>
         </div>
         
         <div class="quiz-actions">
@@ -1129,11 +1193,16 @@ function selectQuizOption(index) {
 
 function submitAnswer() {
     const question = currentQuiz.questions[currentQuiz.currentIndex];
+    const shuffledOpts = currentQuiz.shuffledOptions[currentQuiz.currentIndex];
     const options = document.querySelectorAll('.quiz-option');
-    const correctIndex = question.answer;
+    const correctIndex = shuffledOpts.correctIndex;
     
     // Disable all options
     options.forEach(opt => opt.classList.add('disabled'));
+    
+    // Update analytics for this difficulty
+    analyticsData.totalQuestionAnswered++;
+    analyticsData.totalByDifficulty[question.difficulty]++;
     
     // Show correct/wrong
     options[correctIndex].classList.add('correct');
@@ -1142,13 +1211,20 @@ function submitAnswer() {
         currentQuiz.wrong++;
     } else {
         currentQuiz.correct++;
+        analyticsData.correctByDifficulty[question.difficulty]++;
     }
+    
+    saveLocalData();
     
     currentQuiz.answers.push({
         questionId: question.id,
+        questionText: question.question,
         selected: selectedAnswer,
+        selectedText: shuffledOpts.options[selectedAnswer],
         correct: correctIndex,
-        isCorrect: selectedAnswer === correctIndex
+        correctText: shuffledOpts.options[correctIndex],
+        isCorrect: selectedAnswer === correctIndex,
+        difficulty: question.difficulty
     });
     
     // Update score display
@@ -1180,6 +1256,7 @@ function showQuizResults() {
     
     const passed = currentQuiz.correct >= 8;
     const topicInfo = findTopicById(currentQuiz.topicId);
+    const wrongAnswers = currentQuiz.answers.filter(a => !a.isCorrect);
     
     // Save attempt
     if (!quizAttempts[currentQuiz.topicId]) {
@@ -1188,11 +1265,12 @@ function showQuizResults() {
     quizAttempts[currentQuiz.topicId].push({
         date: new Date().toISOString(),
         score: currentQuiz.correct,
-        passed
+        passed,
+        wrongAnswers: wrongAnswers.map(a => ({ question: a.questionText, yourAnswer: a.selectedText, correct: a.correctText }))
     });
     saveLocalData();
     
-    // If passed, mark topic as complete
+    // If passed, mark topic as complete and show confetti
     if (passed && !completionData[currentQuiz.topicId]) {
         completionData[currentQuiz.topicId] = true;
         saveLocalData();
@@ -1201,9 +1279,40 @@ function showQuizResults() {
         if (syncConfig.binId && syncConfig.autoSync) {
             debouncedSync();
         }
+        
+        // Show confetti!
+        triggerConfetti();
     }
     
     modalTitle.textContent = passed ? '🎉 Quiz Passed!' : '📚 Keep Studying';
+    
+    // Build wrong answers review section
+    const wrongAnswersHtml = wrongAnswers.length > 0 ? `
+        <div class="quiz-review-section">
+            <div class="quiz-review-title">📝 Review Incorrect Answers (${wrongAnswers.length})</div>
+            <div class="quiz-review-list">
+                ${wrongAnswers.map((a, i) => `
+                    <div class="quiz-review-item">
+                        <div class="quiz-review-question">
+                            <span class="quiz-review-num">${i + 1}.</span>
+                            <span class="quiz-review-difficulty ${a.difficulty}">${a.difficulty}</span>
+                            ${a.questionText}
+                        </div>
+                        <div class="quiz-review-answers">
+                            <div class="quiz-review-wrong">
+                                <span class="review-label">Your answer:</span>
+                                <span class="review-text wrong">${a.selectedText}</span>
+                            </div>
+                            <div class="quiz-review-correct">
+                                <span class="review-label">Correct:</span>
+                                <span class="review-text correct">${a.correctText}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    ` : '';
     
     modalBody.innerHTML = `
         <div class="quiz-results">
@@ -1216,12 +1325,18 @@ function showQuizResults() {
             <div class="quiz-results-score ${passed ? 'pass' : 'fail'}">
                 ${currentQuiz.correct}/10
             </div>
+            <div class="quiz-results-breakdown">
+                <span class="breakdown-item easy">Easy: ${currentQuiz.answers.filter(a => a.difficulty === 'easy' && a.isCorrect).length}/${currentQuiz.answers.filter(a => a.difficulty === 'easy').length}</span>
+                <span class="breakdown-item medium">Medium: ${currentQuiz.answers.filter(a => a.difficulty === 'medium' && a.isCorrect).length}/${currentQuiz.answers.filter(a => a.difficulty === 'medium').length}</span>
+                <span class="breakdown-item hard">Hard: ${currentQuiz.answers.filter(a => a.difficulty === 'hard' && a.isCorrect).length}/${currentQuiz.answers.filter(a => a.difficulty === 'hard').length}</span>
+            </div>
             <div class="quiz-results-message">
                 ${passed ? 
                     `You scored ${currentQuiz.correct} out of 10! This topic "${topicInfo?.topic.name}" has been marked as complete.` : 
-                    `You scored ${currentQuiz.correct} out of 10. You need at least 8 correct answers to complete this topic. Review the subtopics and try again!`
+                    `You scored ${currentQuiz.correct} out of 10. You need at least 8 correct answers to complete this topic. Review the questions below and try again!`
                 }
             </div>
+            ${wrongAnswersHtml}
             <div class="quiz-results-actions">
                 ${!passed ? 
                     `<button class="quiz-btn" onclick="startQuiz('${currentQuiz.topicId}')">Retry Quiz</button>` : 
@@ -1235,17 +1350,179 @@ function showQuizResults() {
     `;
 }
 
+// Confetti animation
+function triggerConfetti() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'confetti-canvas';
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10000;';
+    document.body.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const confettiPieces = [];
+    const colors = ['#00d4ff', '#00ff88', '#ff6b35', '#ffcc00', '#ff3366', '#a855f7'];
+    
+    // Create confetti pieces
+    for (let i = 0; i < 150; i++) {
+        confettiPieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            w: Math.random() * 10 + 5,
+            h: Math.random() * 6 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            speed: Math.random() * 3 + 2,
+            angle: Math.random() * Math.PI * 2,
+            spin: (Math.random() - 0.5) * 0.2
+        });
+    }
+    
+    let animationFrame;
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        let allDone = true;
+        confettiPieces.forEach(p => {
+            p.y += p.speed;
+            p.angle += p.spin;
+            
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+            
+            if (p.y < canvas.height + 50) allDone = false;
+        });
+        
+        if (!allDone) {
+            animationFrame = requestAnimationFrame(animate);
+        } else {
+            cancelAnimationFrame(animationFrame);
+            canvas.remove();
+        }
+    }
+    
+    animate();
+    
+    // Remove canvas after 5 seconds as fallback
+    setTimeout(() => {
+        if (canvas.parentNode) canvas.remove();
+    }, 5000);
+}
+
 function closeQuizModal() {
     document.getElementById('quizModal').classList.remove('active');
     selectedAnswer = null;
     currentQuiz = {
         topicId: null,
         questions: [],
+        shuffledOptions: [],
         currentIndex: 0,
         answers: [],
         correct: 0,
         wrong: 0
     };
+}
+
+// ===== Analytics Modal =====
+function openAnalyticsModal() {
+    const modal = document.getElementById('analyticsModal');
+    if (!modal) return;
+    
+    const modalBody = document.getElementById('analyticsModalBody');
+    
+    // Calculate stats
+    const overallStats = calculateOverallStats();
+    const easyAcc = analyticsData.totalByDifficulty.easy > 0 
+        ? Math.round((analyticsData.correctByDifficulty.easy / analyticsData.totalByDifficulty.easy) * 100) : 0;
+    const mediumAcc = analyticsData.totalByDifficulty.medium > 0 
+        ? Math.round((analyticsData.correctByDifficulty.medium / analyticsData.totalByDifficulty.medium) * 100) : 0;
+    const hardAcc = analyticsData.totalByDifficulty.hard > 0 
+        ? Math.round((analyticsData.correctByDifficulty.hard / analyticsData.totalByDifficulty.hard) * 100) : 0;
+    const overallAcc = analyticsData.totalQuestionAnswered > 0
+        ? Math.round(((analyticsData.correctByDifficulty.easy + analyticsData.correctByDifficulty.medium + analyticsData.correctByDifficulty.hard) / analyticsData.totalQuestionAnswered) * 100) : 0;
+    
+    // Get subject progress
+    const subjectProgress = syllabusData.subjects.map(s => ({
+        name: s.shortName,
+        color: s.color,
+        ...calculateSubjectStats(s)
+    }));
+    
+    modalBody.innerHTML = `
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <div class="analytics-card-title">📊 Overall Progress</div>
+                <div class="analytics-stat-big">${overallStats.percentage}%</div>
+                <div class="analytics-stat-sub">${overallStats.completed}/${overallStats.total} topics completed</div>
+            </div>
+            
+            <div class="analytics-card">
+                <div class="analytics-card-title">📝 Quiz Performance</div>
+                <div class="analytics-stat-big">${overallAcc}%</div>
+                <div class="analytics-stat-sub">${analyticsData.totalQuizzesTaken} quizzes taken • ${analyticsData.totalQuestionAnswered} questions answered</div>
+            </div>
+            
+            <div class="analytics-card full-width">
+                <div class="analytics-card-title">🎯 Accuracy by Difficulty</div>
+                <div class="analytics-difficulty-bars">
+                    <div class="difficulty-bar-item">
+                        <span class="difficulty-label easy">Easy</span>
+                        <div class="difficulty-bar-track">
+                            <div class="difficulty-bar-fill easy" style="width: ${easyAcc}%"></div>
+                        </div>
+                        <span class="difficulty-percent">${easyAcc}%</span>
+                        <span class="difficulty-count">(${analyticsData.correctByDifficulty.easy}/${analyticsData.totalByDifficulty.easy})</span>
+                    </div>
+                    <div class="difficulty-bar-item">
+                        <span class="difficulty-label medium">Medium</span>
+                        <div class="difficulty-bar-track">
+                            <div class="difficulty-bar-fill medium" style="width: ${mediumAcc}%"></div>
+                        </div>
+                        <span class="difficulty-percent">${mediumAcc}%</span>
+                        <span class="difficulty-count">(${analyticsData.correctByDifficulty.medium}/${analyticsData.totalByDifficulty.medium})</span>
+                    </div>
+                    <div class="difficulty-bar-item">
+                        <span class="difficulty-label hard">Hard</span>
+                        <div class="difficulty-bar-track">
+                            <div class="difficulty-bar-fill hard" style="width: ${hardAcc}%"></div>
+                        </div>
+                        <span class="difficulty-percent">${hardAcc}%</span>
+                        <span class="difficulty-count">(${analyticsData.correctByDifficulty.hard}/${analyticsData.totalByDifficulty.hard})</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-card full-width">
+                <div class="analytics-card-title">📚 Subject Progress</div>
+                <div class="analytics-subjects">
+                    ${subjectProgress.map(s => `
+                        <div class="analytics-subject-item">
+                            <span class="subject-name" style="color: ${s.color}">${s.name}</span>
+                            <div class="subject-bar-track">
+                                <div class="subject-bar-fill" style="width: ${s.percentage}%; background: ${s.color}"></div>
+                            </div>
+                            <span class="subject-percent">${s.percentage}%</span>
+                            <span class="subject-count">${s.completed}/${s.total}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+        
+        <div class="analytics-tip">
+            💡 <strong>Tip:</strong> Focus on improving your ${hardAcc < mediumAcc ? 'hard' : mediumAcc < easyAcc ? 'medium' : 'easy'} question accuracy!
+        </div>
+    `;
+    
+    modal.classList.add('active');
+}
+
+function closeAnalyticsModal() {
+    document.getElementById('analyticsModal')?.classList.remove('active');
 }
 
 function refreshUI() {
@@ -1280,3 +1557,5 @@ window.nextQuestion = nextQuestion;
 window.showQuizResults = showQuizResults;
 window.closeQuizModal = closeQuizModal;
 window.refreshUI = refreshUI;
+window.openAnalyticsModal = openAnalyticsModal;
+window.closeAnalyticsModal = closeAnalyticsModal;

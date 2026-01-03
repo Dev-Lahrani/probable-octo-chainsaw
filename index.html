@@ -37,6 +37,10 @@
                         <span class="stat-value" id="streakCount">0🔥</span>
                         <span class="stat-label">Streak</span>
                     </div>
+                    <div class="stat-item analytics-btn" onclick="openAnalyticsModal()" title="View Analytics (A)">
+                        <span class="stat-value">📊</span>
+                        <span class="stat-label">Stats</span>
+                    </div>
                     <div class="sync-status">
                         <span class="sync-indicator" id="syncIndicator"></span>
                         <span id="syncText">Local</span>
@@ -178,6 +182,10 @@
                     <div style="display:flex;justify-content:space-between;"><kbd>?</kbd> <span>Show this help</span></div>
                     <div style="display:flex;justify-content:space-between;"><kbd>S</kbd> <span>Sync now</span></div>
                     <div style="display:flex;justify-content:space-between;"><kbd>E</kbd> <span>Export data</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>A</kbd> <span>Open analytics</span></div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">During Quiz:</div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>1-4</kbd> <span>Select answer</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>Enter</kbd> <span>Submit answer</span></div>
                 </div>
             </div>
         </div>
@@ -205,6 +213,19 @@
             </div>
             <div class="modal-body" id="topicModalBody">
                 <!-- Topic details rendered dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div class="modal" id="analyticsModal">
+        <div class="modal-content analytics-modal-content">
+            <div class="modal-header">
+                <h2>📊 Performance Analytics</h2>
+                <button class="modal-close" onclick="closeAnalyticsModal()">×</button>
+            </div>
+            <div class="modal-body" id="analyticsModalBody">
+                <!-- Analytics rendered dynamically -->
             </div>
         </div>
     </div>

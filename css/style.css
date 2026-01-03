@@ -1488,3 +1488,297 @@ kbd {
 .today-topic-card.completed .topic-quiz-btn {
     display: none;
 }
+/* ===== Analytics Button in Header ===== */
+.stat-item.analytics-btn {
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid transparent;
+    padding: 0.25rem 0.5rem;
+    margin: -0.25rem 0;
+}
+
+.stat-item.analytics-btn:hover {
+    border-color: var(--primary);
+    background: var(--bg-hover);
+}
+
+/* ===== Analytics Modal Styles ===== */
+.analytics-modal-content {
+    max-width: 700px;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.analytics-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    text-align: center;
+}
+
+.analytics-card-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.analytics-stat-big {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: var(--font-mono);
+}
+
+.analytics-stat-sub {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* Difficulty Bars */
+.analytics-difficulty-bars {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.analytics-difficulty-bars h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.difficulty-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.difficulty-bar-item span:first-child {
+    width: 60px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.difficulty-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-hover);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.difficulty-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.difficulty-bar-fill.easy {
+    background: var(--success);
+}
+
+.difficulty-bar-fill.medium {
+    background: var(--warning);
+}
+
+.difficulty-bar-fill.hard {
+    background: var(--danger);
+}
+
+.difficulty-bar-item span:last-child {
+    width: 45px;
+    text-align: right;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+/* Subject Performance */
+.analytics-subjects {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.analytics-subjects h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.analytics-subject-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.analytics-subject-item:last-child {
+    border-bottom: none;
+}
+
+.analytics-subject-item span:first-child {
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+.analytics-subject-item span:last-child {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.analytics-subject-item span:last-child.good {
+    color: var(--success);
+}
+
+.analytics-subject-item span:last-child.average {
+    color: var(--warning);
+}
+
+.analytics-subject-item span:last-child.poor {
+    color: var(--danger);
+}
+
+/* ===== Quiz Review Section ===== */
+.quiz-review-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.quiz-review-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--danger);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quiz-review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quiz-review-item {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--danger);
+    padding: 1rem;
+}
+
+.quiz-review-item .question-text {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.quiz-review-item .answer-row {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.quiz-review-item .your-answer {
+    color: var(--danger);
+}
+
+.quiz-review-item .your-answer::before {
+    content: "Your answer: ";
+    color: var(--text-muted);
+}
+
+.quiz-review-item .correct-answer {
+    color: var(--success);
+}
+
+.quiz-review-item .correct-answer::before {
+    content: "Correct: ";
+    color: var(--text-muted);
+}
+
+/* ===== Quiz Keyboard Hint ===== */
+.quiz-keyboard-hint {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.quiz-keyboard-hint kbd {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 0.15rem 0.4rem;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+}
+
+/* ===== Quiz Results Breakdown ===== */
+.quiz-results-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+}
+
+.breakdown-item {
+    text-align: center;
+}
+
+.breakdown-item .count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.breakdown-item .count.correct {
+    color: var(--success);
+}
+
+.breakdown-item .count.wrong {
+    color: var(--danger);
+}
+
+.breakdown-item .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* ===== Confetti Canvas ===== */
+#confettiCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
