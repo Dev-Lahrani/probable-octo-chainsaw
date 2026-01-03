@@ -1,8 +1,21 @@
 // ===== Global State =====
 let syllabusData = null;
 let completionData = {};
+let questionsData = null;
+let quizAttempts = {};
 const LOCAL_STORAGE_KEY = 'syllabus_completion_data';
 const SYNC_CONFIG_KEY = 'syllabus_sync_config';
+const QUIZ_ATTEMPTS_KEY = 'syllabus_quiz_attempts';
+
+// Quiz state
+let currentQuiz = {
+    topicId: null,
+    questions: [],
+    currentIndex: 0,
+    answers: [],
+    correct: 0,
+    wrong: 0
+};
 
 // JSONBin.io configuration (free, no signup required for public bins)
 let syncConfig = {
@@ -15,6 +28,7 @@ let syncConfig = {
 // ===== Initialize App =====
 document.addEventListener('DOMContentLoaded', async () => {
     await loadSyllabusData();
+    await loadQuestionsData();
     loadLocalData();
     await attemptCloudSync();
     initializeApp();
@@ -32,6 +46,35 @@ async function loadSyllabusData() {
     }
 }
 
+async function loadQuestionsData() {
+    try {
+        const response = await fetch('data/questions.json');
+        questionsData = await response.json();
+    } catch (error) {
+        console.error('Error loading questions data:', error);
+        // Continue without questions - will use default questions
+        questionsData = { topicQuestions: {}, defaultQuestions: getDefaultQuestions() };
+    }
+}
+
+function getDefaultQuestions() {
+    return {
+        subtopics: ["Core concepts", "Practical applications", "Related theory", "Common use cases"],
+        questions: [
+            {"id": "dq1", "difficulty": "easy", "question": "What is the main purpose of studying this topic?", "options": ["To understand fundamental concepts", "To memorize facts", "To skip the next topic", "It has no purpose"], "answer": 0},
+            {"id": "dq2", "difficulty": "easy", "question": "This topic is important because:", "options": ["It builds foundation for advanced concepts", "It's easy to skip", "It's not related to anything", "It's outdated"], "answer": 0},
+            {"id": "dq3", "difficulty": "easy", "question": "The best way to learn this topic is:", "options": ["Practice with examples and problems", "Only reading", "Skipping it", "Memorization without understanding"], "answer": 0},
+            {"id": "dq4", "difficulty": "medium", "question": "This topic connects to other subjects by:", "options": ["Providing shared concepts and terminology", "Having no connections", "Being completely isolated", "Replacing other topics"], "answer": 0},
+            {"id": "dq5", "difficulty": "medium", "question": "Understanding this topic helps in:", "options": ["Solving related problems effectively", "Nothing practical", "Only exams", "Only interviews"], "answer": 0},
+            {"id": "dq6", "difficulty": "medium", "question": "The key takeaway from this topic is:", "options": ["Core principles that apply broadly", "Random facts", "Outdated information", "Nothing useful"], "answer": 0},
+            {"id": "dq7", "difficulty": "medium", "question": "This topic requires prerequisite knowledge of:", "options": ["Basic fundamentals of the subject", "Nothing at all", "Advanced mathematics only", "Programming only"], "answer": 0},
+            {"id": "dq8", "difficulty": "hard", "question": "Advanced applications of this topic include:", "options": ["Real-world problem solving and research", "No applications exist", "Only theoretical use", "Only historical interest"], "answer": 0},
+            {"id": "dq9", "difficulty": "hard", "question": "Common misconceptions about this topic:", "options": ["Should be identified and corrected through study", "Don't exist", "Should be ignored", "Are always correct"], "answer": 0},
+            {"id": "dq10", "difficulty": "hard", "question": "Mastery of this topic is demonstrated by:", "options": ["Ability to apply concepts to new problems", "Memorizing definitions", "Passing one test", "Reading once"], "answer": 0}
+        ]
+    };
+}
+
 function loadLocalData() {
     // Load completion data
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -44,11 +87,18 @@ function loadLocalData() {
     if (syncStored) {
         syncConfig = { ...syncConfig, ...JSON.parse(syncStored) };
     }
+    
+    // Load quiz attempts
+    const quizStored = localStorage.getItem(QUIZ_ATTEMPTS_KEY);
+    if (quizStored) {
+        quizAttempts = JSON.parse(quizStored);
+    }
 }
 
 function saveLocalData() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(completionData));
     localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
+    localStorage.setItem(QUIZ_ATTEMPTS_KEY, JSON.stringify(quizAttempts));
 }
 
 // ===== Cloud Sync Functions (JSONBin.io) =====
@@ -68,6 +118,7 @@ async function attemptCloudSync() {
             
             if (cloudCount > localCount || (cloudData.lastUpdated && new Date(cloudData.lastUpdated) > new Date(syncConfig.lastSync || 0))) {
                 completionData = cloudData.completion || {};
+                quizAttempts = cloudData.quizAttempts || {};
                 saveLocalData();
             }
         }
@@ -113,6 +164,7 @@ async function saveToCloud() {
             },
             body: JSON.stringify({
                 completion: completionData,
+                quizAttempts: quizAttempts,
                 lastUpdated: new Date().toISOString()
             })
         });
@@ -145,6 +197,7 @@ async function createNewBin() {
             },
             body: JSON.stringify({
                 completion: completionData,
+                quizAttempts: quizAttempts,
                 lastUpdated: new Date().toISOString()
             })
         });
@@ -399,8 +452,8 @@ function renderTodaySection() {
     container.innerHTML = todayTopics.map(item => `
         <div class="today-topic-card ${completionData[item.topic.id] ? 'completed' : ''}" data-topic-id="${item.topic.id}">
             <div class="topic-checkbox ${completionData[item.topic.id] ? 'checked' : ''}" 
-                 onclick="toggleTopic('${item.topic.id}')"></div>
-            <div class="topic-info">
+                 onclick="event.stopPropagation();" style="pointer-events: none; opacity: 0.5;"></div>
+            <div class="topic-info" onclick="openTopicModal('${item.topic.id}')">
                 <div class="topic-name">${item.topic.name}</div>
                 <div class="topic-meta">
                     <span class="topic-subject" style="border-color: ${item.subject.color}; color: ${item.subject.color}">
@@ -409,6 +462,7 @@ function renderTodaySection() {
                     <span>D${item.topic.day}</span>
                 </div>
             </div>
+            ${!completionData[item.topic.id] ? `<button class="topic-quiz-btn" onclick="event.stopPropagation(); openTopicModal('${item.topic.id}')">Take Quiz</button>` : ''}
         </div>
     `).join('');
 }
@@ -498,10 +552,11 @@ function openSubjectModal(subjectId) {
                 </div>
                 <div class="unit-topics">
                     ${unit.topics.map(topic => `
-                        <div class="unit-topic ${completionData[topic.id] ? 'completed' : ''}" data-topic-id="${topic.id}">
+                        <div class="unit-topic ${completionData[topic.id] ? 'completed' : ''}" data-topic-id="${topic.id}" onclick="closeModal(); openTopicModal('${topic.id}')">
                             <div class="topic-checkbox ${completionData[topic.id] ? 'checked' : ''}" 
-                                 onclick="toggleTopic('${topic.id}')"></div>
+                                 onclick="event.stopPropagation();" style="pointer-events: none;"></div>
                             <span class="topic-name">${topic.name}</span>
+                            <span class="topic-quiz-indicator ${completionData[topic.id] ? 'unlocked' : ''}">${completionData[topic.id] ? '✓ Done' : 'Quiz'}</span>
                             <span class="topic-day">D${topic.day}</span>
                         </div>
                     `).join('')}
@@ -622,6 +677,22 @@ function setupEventListeners() {
         if (e.target.id === 'subjectModal') closeModal();
     });
     
+    // Topic modal close
+    document.getElementById('topicModalClose')?.addEventListener('click', closeTopicModal);
+    document.getElementById('topicModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'topicModal') closeTopicModal();
+    });
+    
+    // Quiz modal close
+    document.getElementById('quizModalClose')?.addEventListener('click', closeQuizModal);
+    document.getElementById('quizModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'quizModal') {
+            if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+                closeQuizModal();
+            }
+        }
+    });
+    
     // Help modal close
     document.getElementById('helpModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'helpModal') closeHelpModal();
@@ -631,6 +702,8 @@ function setupEventListeners() {
         if (e.key === 'Escape') {
             closeModal();
             closeHelpModal();
+            closeTopicModal();
+            // Don't close quiz modal on escape to prevent accidental exit
         }
         // Keyboard shortcuts
         if (e.key === '?' || (e.shiftKey && e.key === '/')) {
@@ -791,8 +864,8 @@ function applyDayFilter() {
         container.innerHTML = topics.map(item => `
             <div class="today-topic-card ${completionData[item.topic.id] ? 'completed' : ''}" data-topic-id="${item.topic.id}">
                 <div class="topic-checkbox ${completionData[item.topic.id] ? 'checked' : ''}" 
-                     onclick="toggleTopic('${item.topic.id}')"></div>
-                <div class="topic-info">
+                     onclick="event.stopPropagation();" style="pointer-events: none; opacity: 0.5;"></div>
+                <div class="topic-info" onclick="openTopicModal('${item.topic.id}')">
                     <div class="topic-name">${item.topic.name}</div>
                     <div class="topic-meta">
                         <span class="topic-subject" style="border-color: ${item.subject.color}; color: ${item.subject.color}">
@@ -801,6 +874,7 @@ function applyDayFilter() {
                         <span>D${item.topic.day}</span>
                     </div>
                 </div>
+                ${!completionData[item.topic.id] ? `<button class="topic-quiz-btn" onclick="event.stopPropagation(); openTopicModal('${item.topic.id}')">Take Quiz</button>` : ''}
             </div>
         `).join('');
     }
@@ -820,6 +894,7 @@ function showError(message) {
 function exportProgress() {
     const data = JSON.stringify({
         completion: completionData,
+        quizAttempts: quizAttempts,
         exportDate: new Date().toISOString()
     }, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
@@ -837,6 +912,9 @@ function importProgress(file) {
         try {
             const data = JSON.parse(e.target.result);
             completionData = data.completion || data;
+            if (data.quizAttempts) {
+                quizAttempts = data.quizAttempts;
+            }
             saveLocalData();
             if (syncConfig.binId) await saveToCloud();
             initializeApp();
@@ -848,9 +926,357 @@ function importProgress(file) {
     reader.readAsText(file);
 }
 
+// ===== Topic Modal Functions =====
+function openTopicModal(topicId) {
+    const topicInfo = findTopicById(topicId);
+    if (!topicInfo) return;
+    
+    const { subject, unit, topic } = topicInfo;
+    const modal = document.getElementById('topicModal');
+    const modalTitle = document.getElementById('topicModalTitle');
+    const modalBody = document.getElementById('topicModalBody');
+    
+    // Get subtopics for this topic
+    const topicQuestions = questionsData?.topicQuestions?.[topicId] || questionsData?.defaultQuestions;
+    const subtopics = topicQuestions?.subtopics || ['Core concepts', 'Practical applications', 'Key definitions', 'Examples'];
+    
+    // Get quiz attempt history
+    const attempts = quizAttempts[topicId] || [];
+    const isCompleted = completionData[topicId];
+    
+    modalTitle.textContent = topic.name;
+    modalTitle.style.color = subject.color;
+    
+    modalBody.innerHTML = `
+        <div class="topic-details-header">
+            <div class="topic-details-info">
+                <div class="topic-details-meta">
+                    <span class="topic-details-badge" style="border-color: ${subject.color}; color: ${subject.color}">${subject.shortName}</span>
+                    <span class="topic-details-badge">Day ${topic.day}</span>
+                    <span class="topic-details-badge">${unit.name}</span>
+                </div>
+            </div>
+            <div class="topic-details-status ${isCompleted ? 'completed' : 'pending'}">
+                ${isCompleted ? '✓ Completed' : 'Pending'}
+            </div>
+        </div>
+        
+        <div class="subtopics-section">
+            <div class="subtopics-title">📚 Subtopics to Study</div>
+            <div class="subtopics-list">
+                ${subtopics.map(st => `
+                    <div class="subtopic-item">
+                        <div class="subtopic-bullet"></div>
+                        <span>${st}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        
+        <div class="topic-quiz-section">
+            <div class="topic-quiz-info">
+                <h4>${isCompleted ? '✓ Topic Completed!' : '🎯 Complete the Quiz'}</h4>
+                <p>${isCompleted ? 'You have successfully completed this topic by passing the quiz.' : 'Study the subtopics above, then take the quiz to mark this topic complete.'}</p>
+            </div>
+            
+            <div class="quiz-requirement">
+                <strong>Requirement:</strong> Score 8 out of 10 questions correctly to complete this topic.
+                Questions include Easy, Medium, and Hard difficulty levels.
+            </div>
+            
+            ${isCompleted ? 
+                `<button class="start-quiz-btn" onclick="startQuiz('${topicId}')" style="background: var(--bg-tertiary); border: 1px solid var(--success); color: var(--success);">Retake Quiz</button>` :
+                `<button class="start-quiz-btn" onclick="startQuiz('${topicId}')">Start Quiz →</button>`
+            }
+            
+            ${attempts.length > 0 ? `
+                <div class="quiz-history">
+                    <div class="quiz-history-title">Previous Attempts (${attempts.length})</div>
+                    ${attempts.slice(-5).reverse().map(a => `
+                        <div class="quiz-history-item">
+                            <span>${new Date(a.date).toLocaleDateString()}</span>
+                            <span class="quiz-history-score ${a.score >= 8 ? 'pass' : 'fail'}">${a.score}/10</span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : ''}
+        </div>
+    `;
+    
+    modal.classList.add('active');
+}
+
+function closeTopicModal() {
+    document.getElementById('topicModal').classList.remove('active');
+}
+
+function findTopicById(topicId) {
+    for (const subject of syllabusData.subjects) {
+        for (const unit of subject.units) {
+            for (const topic of unit.topics) {
+                if (topic.id === topicId) {
+                    return { subject, unit, topic };
+                }
+            }
+        }
+    }
+    return null;
+}
+
+// ===== Quiz Functions =====
+function startQuiz(topicId) {
+    closeTopicModal();
+    
+    // Get questions for this topic
+    const topicQuestions = questionsData?.topicQuestions?.[topicId]?.questions || questionsData?.defaultQuestions?.questions;
+    
+    if (!topicQuestions || topicQuestions.length < 10) {
+        // Generate more questions if needed by duplicating and shuffling
+        alert('Quiz questions are being prepared. Please try again.');
+        return;
+    }
+    
+    // Select 10 questions with mixed difficulty (3 easy, 4 medium, 3 hard)
+    const easyQs = topicQuestions.filter(q => q.difficulty === 'easy');
+    const mediumQs = topicQuestions.filter(q => q.difficulty === 'medium');
+    const hardQs = topicQuestions.filter(q => q.difficulty === 'hard');
+    
+    const selectedQuestions = [
+        ...shuffleArray(easyQs).slice(0, 3),
+        ...shuffleArray(mediumQs).slice(0, 4),
+        ...shuffleArray(hardQs).slice(0, 3)
+    ];
+    
+    // If we don't have enough of any difficulty, fill with whatever we have
+    while (selectedQuestions.length < 10 && topicQuestions.length >= 10) {
+        const remaining = topicQuestions.filter(q => !selectedQuestions.includes(q));
+        if (remaining.length === 0) break;
+        selectedQuestions.push(remaining[0]);
+    }
+    
+    // Shuffle the final selection
+    const shuffledQuestions = shuffleArray(selectedQuestions);
+    
+    // Initialize quiz state
+    currentQuiz = {
+        topicId,
+        questions: shuffledQuestions.slice(0, 10),
+        currentIndex: 0,
+        answers: [],
+        correct: 0,
+        wrong: 0
+    };
+    
+    renderQuizQuestion();
+    document.getElementById('quizModal').classList.add('active');
+}
+
+function renderQuizQuestion() {
+    const modal = document.getElementById('quizModal');
+    const modalTitle = document.getElementById('quizModalTitle');
+    const modalBody = document.getElementById('quizModalBody');
+    
+    const topicInfo = findTopicById(currentQuiz.topicId);
+    const question = currentQuiz.questions[currentQuiz.currentIndex];
+    const questionNum = currentQuiz.currentIndex + 1;
+    const totalQuestions = currentQuiz.questions.length;
+    
+    modalTitle.textContent = topicInfo ? topicInfo.topic.name : 'Quiz';
+    
+    modalBody.innerHTML = `
+        <div class="quiz-header">
+            <div class="quiz-progress">
+                <span class="quiz-progress-text">Question ${questionNum} of ${totalQuestions}</span>
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" style="width: ${(questionNum / totalQuestions) * 100}%"></div>
+                </div>
+            </div>
+            <div class="quiz-score">
+                <span class="quiz-score-correct">✓ ${currentQuiz.correct}</span>
+                <span class="quiz-score-wrong">✗ ${currentQuiz.wrong}</span>
+            </div>
+        </div>
+        
+        <div class="quiz-question-container">
+            <span class="quiz-difficulty ${question.difficulty}">${question.difficulty}</span>
+            <div class="quiz-question-text">${question.question}</div>
+            <div class="quiz-options">
+                ${question.options.map((option, index) => `
+                    <div class="quiz-option" data-index="${index}" onclick="selectQuizOption(${index})">
+                        <div class="quiz-option-marker">${String.fromCharCode(65 + index)}</div>
+                        <div class="quiz-option-text">${option}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        
+        <div class="quiz-actions">
+            <button class="quiz-btn" onclick="closeQuizModal()">Exit Quiz</button>
+            <button class="quiz-btn primary" id="submitAnswerBtn" onclick="submitAnswer()" disabled>Submit Answer</button>
+        </div>
+    `;
+}
+
+let selectedAnswer = null;
+
+function selectQuizOption(index) {
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => opt.classList.remove('selected'));
+    options[index].classList.add('selected');
+    selectedAnswer = index;
+    document.getElementById('submitAnswerBtn').disabled = false;
+}
+
+function submitAnswer() {
+    const question = currentQuiz.questions[currentQuiz.currentIndex];
+    const options = document.querySelectorAll('.quiz-option');
+    const correctIndex = question.answer;
+    
+    // Disable all options
+    options.forEach(opt => opt.classList.add('disabled'));
+    
+    // Show correct/wrong
+    options[correctIndex].classList.add('correct');
+    if (selectedAnswer !== correctIndex) {
+        options[selectedAnswer].classList.add('wrong');
+        currentQuiz.wrong++;
+    } else {
+        currentQuiz.correct++;
+    }
+    
+    currentQuiz.answers.push({
+        questionId: question.id,
+        selected: selectedAnswer,
+        correct: correctIndex,
+        isCorrect: selectedAnswer === correctIndex
+    });
+    
+    // Update score display
+    document.querySelector('.quiz-score-correct').textContent = `✓ ${currentQuiz.correct}`;
+    document.querySelector('.quiz-score-wrong').textContent = `✗ ${currentQuiz.wrong}`;
+    
+    // Change button to next
+    const submitBtn = document.getElementById('submitAnswerBtn');
+    if (currentQuiz.currentIndex < currentQuiz.questions.length - 1) {
+        submitBtn.textContent = 'Next Question →';
+        submitBtn.onclick = nextQuestion;
+    } else {
+        submitBtn.textContent = 'See Results';
+        submitBtn.onclick = showQuizResults;
+    }
+    submitBtn.disabled = false;
+}
+
+function nextQuestion() {
+    currentQuiz.currentIndex++;
+    selectedAnswer = null;
+    renderQuizQuestion();
+}
+
+function showQuizResults() {
+    const modal = document.getElementById('quizModal');
+    const modalTitle = document.getElementById('quizModalTitle');
+    const modalBody = document.getElementById('quizModalBody');
+    
+    const passed = currentQuiz.correct >= 8;
+    const topicInfo = findTopicById(currentQuiz.topicId);
+    
+    // Save attempt
+    if (!quizAttempts[currentQuiz.topicId]) {
+        quizAttempts[currentQuiz.topicId] = [];
+    }
+    quizAttempts[currentQuiz.topicId].push({
+        date: new Date().toISOString(),
+        score: currentQuiz.correct,
+        passed
+    });
+    saveLocalData();
+    
+    // If passed, mark topic as complete
+    if (passed && !completionData[currentQuiz.topicId]) {
+        completionData[currentQuiz.topicId] = true;
+        saveLocalData();
+        
+        // Sync to cloud
+        if (syncConfig.binId && syncConfig.autoSync) {
+            debouncedSync();
+        }
+    }
+    
+    modalTitle.textContent = passed ? '🎉 Quiz Passed!' : '📚 Keep Studying';
+    
+    modalBody.innerHTML = `
+        <div class="quiz-results">
+            <div class="quiz-results-icon ${passed ? 'success' : 'fail'}">
+                ${passed ? '🏆' : '📖'}
+            </div>
+            <div class="quiz-results-title">
+                ${passed ? 'Congratulations!' : 'Not Quite There'}
+            </div>
+            <div class="quiz-results-score ${passed ? 'pass' : 'fail'}">
+                ${currentQuiz.correct}/10
+            </div>
+            <div class="quiz-results-message">
+                ${passed ? 
+                    `You scored ${currentQuiz.correct} out of 10! This topic "${topicInfo?.topic.name}" has been marked as complete.` : 
+                    `You scored ${currentQuiz.correct} out of 10. You need at least 8 correct answers to complete this topic. Review the subtopics and try again!`
+                }
+            </div>
+            <div class="quiz-results-actions">
+                ${!passed ? 
+                    `<button class="quiz-btn" onclick="startQuiz('${currentQuiz.topicId}')">Retry Quiz</button>` : 
+                    ''
+                }
+                <button class="quiz-btn primary" onclick="closeQuizModal(); ${passed ? 'refreshUI()' : ''}">
+                    ${passed ? 'Continue' : 'Back to Study'}
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function closeQuizModal() {
+    document.getElementById('quizModal').classList.remove('active');
+    selectedAnswer = null;
+    currentQuiz = {
+        topicId: null,
+        questions: [],
+        currentIndex: 0,
+        answers: [],
+        correct: 0,
+        wrong: 0
+    };
+}
+
+function refreshUI() {
+    updateOverallProgress();
+    updateStreakCounter();
+    renderTodaySection();
+    renderSubjectCards();
+    renderScheduleGrid();
+}
+
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
 // Global functions
 window.toggleTopic = toggleTopic;
 window.openSubjectModal = openSubjectModal;
 window.showDayDetails = showDayDetails;
 window.exportProgress = exportProgress;
 window.importProgress = importProgress;
+window.openTopicModal = openTopicModal;
+window.closeTopicModal = closeTopicModal;
+window.startQuiz = startQuiz;
+window.selectQuizOption = selectQuizOption;
+window.submitAnswer = submitAnswer;
+window.nextQuestion = nextQuestion;
+window.showQuizResults = showQuizResults;
+window.closeQuizModal = closeQuizModal;
+window.refreshUI = refreshUI;
