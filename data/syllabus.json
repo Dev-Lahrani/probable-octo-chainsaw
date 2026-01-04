@@ -1,97 +1,608 @@
 {
-    "metadata": {
-        "title": "Engineering Syllabus",
-        "totalDays": 100,
-        "startDate": "2026-01-05"
-    },
-    "subjects": [
+  "metadata": {
+    "title": "100-Day Learning Journey",
+    "startDate": "2026-01-05",
+    "endDate": "2026-04-15",
+    "totalDays": 100,
+    "hoursPerDay": 4,
+    "bufferDays": 12,
+    "description": "Parallel study plan - all college subjects studied together daily"
+  },
+  "subjects": [
+    {
+      "id": "toc",
+      "name": "Theory of Computation",
+      "shortName": "TOC",
+      "color": "#00d4ff",
+      "totalHours": 28,
+      "priority": "high",
+      "units": [
         {
-            "id": "sub1",
-            "name": "Data Structures",
-            "shortName": "DS",
-            "color": "#00d4ff",
-            "units": [
-                {
-                    "id": "unit1",
-                    "name": "Arrays & Strings",
-                    "topics": [
-                        {"id": "t1", "title": "Array Basics", "day": 1, "subtopics": ["Declaration", "Initialization", "Traversal"]},
-                        {"id": "t2", "title": "String Operations", "day": 2, "subtopics": ["Concatenation", "Substring", "Pattern matching"]},
-                        {"id": "t3", "title": "Two Pointer Technique", "day": 3, "subtopics": ["Concept", "Applications", "Examples"]},
-                        {"id": "t4", "title": "Sliding Window", "day": 4, "subtopics": ["Fixed window", "Variable window", "Problems"]}
-                    ]
-                },
-                {
-                    "id": "unit2",
-                    "name": "Linked Lists",
-                    "topics": [
-                        {"id": "t5", "title": "Singly Linked List", "day": 5, "subtopics": ["Node structure", "Insertion", "Deletion"]},
-                        {"id": "t6", "title": "Doubly Linked List", "day": 6, "subtopics": ["Structure", "Operations", "Applications"]},
-                        {"id": "t7", "title": "Circular Linked List", "day": 7, "subtopics": ["Concept", "Implementation", "Use cases"]}
-                    ]
-                },
-                {
-                    "id": "unit3",
-                    "name": "Stacks & Queues",
-                    "topics": [
-                        {"id": "t8", "title": "Stack Implementation", "day": 8, "subtopics": ["Array based", "Linked list based", "Applications"]},
-                        {"id": "t9", "title": "Queue Types", "day": 9, "subtopics": ["Simple queue", "Circular queue", "Deque"]},
-                        {"id": "t10", "title": "Priority Queue", "day": 10, "subtopics": ["Concept", "Heap implementation", "Applications"]}
-                    ]
-                }
-            ]
+          "id": "toc-u1",
+          "name": "Unit 1: Finite Automata",
+          "hours": 4,
+          "topics": [
+            {"id": "toc-u1-t1", "name": "Introduction to Automata, Computability and Complexity theory", "completed": false, "day": 1},
+            {"id": "toc-u1-t2", "name": "Automaton as a model of computation", "completed": false, "day": 3},
+            {"id": "toc-u1-t3", "name": "Central Concepts: Alphabets, Strings, Languages, Decision Problems", "completed": false, "day": 5},
+            {"id": "toc-u1-t4", "name": "Deterministic Finite Automata (DFA) - Formal Definition", "completed": false, "day": 8},
+            {"id": "toc-u1-t5", "name": "State transition graph, transition table, Language of DFA", "completed": false, "day": 10},
+            {"id": "toc-u1-t6", "name": "Construction of DFAs and proving correctness", "completed": false, "day": 12},
+            {"id": "toc-u1-t7", "name": "Product construction", "completed": false, "day": 15},
+            {"id": "toc-u1-t8", "name": "Nondeterministic Finite Automata (NFA)", "completed": false, "day": 17},
+            {"id": "toc-u1-t9", "name": "NFA with epsilon transition", "completed": false, "day": 19},
+            {"id": "toc-u1-t10", "name": "Conversion of NFA to DFA", "completed": false, "day": 22},
+            {"id": "toc-u1-t11", "name": "Applications and Limitations of Finite Automata", "completed": false, "day": 24}
+          ]
         },
         {
-            "id": "sub2",
-            "name": "Algorithms",
-            "shortName": "ALGO",
-            "color": "#00ff88",
-            "units": [
-                {
-                    "id": "unit4",
-                    "name": "Sorting",
-                    "topics": [
-                        {"id": "t11", "title": "Bubble & Selection Sort", "day": 11, "subtopics": ["Algorithm", "Complexity", "Implementation"]},
-                        {"id": "t12", "title": "Merge Sort", "day": 12, "subtopics": ["Divide and conquer", "Implementation", "Analysis"]},
-                        {"id": "t13", "title": "Quick Sort", "day": 13, "subtopics": ["Partitioning", "Pivot selection", "Optimization"]},
-                        {"id": "t14", "title": "Heap Sort", "day": 14, "subtopics": ["Heap property", "Heapify", "Sort process"]}
-                    ]
-                },
-                {
-                    "id": "unit5",
-                    "name": "Searching",
-                    "topics": [
-                        {"id": "t15", "title": "Binary Search", "day": 15, "subtopics": ["Concept", "Variations", "Problems"]},
-                        {"id": "t16", "title": "Search in Rotated Array", "day": 16, "subtopics": ["Modified binary search", "Edge cases", "Applications"]}
-                    ]
-                }
-            ]
+          "id": "toc-u2",
+          "name": "Unit 2: Regular and Non-Regular Languages",
+          "hours": 6,
+          "topics": [
+            {"id": "toc-u2-t1", "name": "Regular Expression Definition and Operators", "completed": false, "day": 26},
+            {"id": "toc-u2-t2", "name": "Algebraic laws for Regular expressions", "completed": false, "day": 29},
+            {"id": "toc-u2-t3", "name": "Kleene's Theorem: Equivalence of RE and DFAs", "completed": false, "day": 31},
+            {"id": "toc-u2-t4", "name": "Closure properties of Regular Languages", "completed": false, "day": 33},
+            {"id": "toc-u2-t5", "name": "Decision properties and Applications of Regular expressions", "completed": false, "day": 36},
+            {"id": "toc-u2-t6", "name": "Myhill-Nerode theorem and applications", "completed": false, "day": 38},
+            {"id": "toc-u2-t7", "name": "State Minimization algorithm", "completed": false, "day": 40},
+            {"id": "toc-u2-t8", "name": "Equivalence testing of DFAs", "completed": false, "day": 43},
+            {"id": "toc-u2-t9", "name": "Non-Regular Languages and Pigeon-Hole principle", "completed": false, "day": 45},
+            {"id": "toc-u2-t10", "name": "Pumping Lemma for regular Languages", "completed": false, "day": 47}
+          ]
         },
         {
-            "id": "sub3",
-            "name": "Trees & Graphs",
-            "shortName": "TG",
-            "color": "#ff6b35",
-            "units": [
-                {
-                    "id": "unit6",
-                    "name": "Binary Trees",
-                    "topics": [
-                        {"id": "t17", "title": "Tree Traversals", "day": 17, "subtopics": ["Inorder", "Preorder", "Postorder"]},
-                        {"id": "t18", "title": "BST Operations", "day": 18, "subtopics": ["Insert", "Delete", "Search"]},
-                        {"id": "t19", "title": "Balanced Trees", "day": 19, "subtopics": ["AVL", "Red-Black", "Properties"]}
-                    ]
-                },
-                {
-                    "id": "unit7",
-                    "name": "Graphs",
-                    "topics": [
-                        {"id": "t20", "title": "Graph Representation", "day": 20, "subtopics": ["Adjacency matrix", "Adjacency list", "Edge list"]},
-                        {"id": "t21", "title": "BFS & DFS", "day": 21, "subtopics": ["Breadth first", "Depth first", "Applications"]},
-                        {"id": "t22", "title": "Shortest Path", "day": 22, "subtopics": ["Dijkstra", "Bellman-Ford", "Floyd-Warshall"]}
-                    ]
-                }
-            ]
+          "id": "toc-u3",
+          "name": "Unit 3: Context Free Grammars",
+          "hours": 4,
+          "topics": [
+            {"id": "toc-u3-t1", "name": "CFG Definition, Examples, Derivation", "completed": false, "day": 50},
+            {"id": "toc-u3-t2", "name": "Languages of CFG, Constructing CFG", "completed": false, "day": 52},
+            {"id": "toc-u3-t3", "name": "Closure properties of CFLs", "completed": false, "day": 54},
+            {"id": "toc-u3-t4", "name": "Derivation trees and Ambiguity in CFGs", "completed": false, "day": 57},
+            {"id": "toc-u3-t5", "name": "Removing ambiguity, Inherent ambiguity", "completed": false, "day": 59},
+            {"id": "toc-u3-t6", "name": "Normal forms: CNF and GNF", "completed": false, "day": 61},
+            {"id": "toc-u3-t7", "name": "Decision Properties of CFLs", "completed": false, "day": 64},
+            {"id": "toc-u3-t8", "name": "Applications of CFG", "completed": false, "day": 66}
+          ]
+        },
+        {
+          "id": "toc-u4",
+          "name": "Unit 4: Push Down Automata",
+          "hours": 5,
+          "topics": [
+            {"id": "toc-u4-t1", "name": "PDA Description and Definition", "completed": false, "day": 68},
+            {"id": "toc-u4-t2", "name": "Language of PDA, Acceptance by Final state", "completed": false, "day": 71},
+            {"id": "toc-u4-t3", "name": "Acceptance by empty stack", "completed": false, "day": 73},
+            {"id": "toc-u4-t4", "name": "Deterministic and Non-deterministic PDAs", "completed": false, "day": 75},
+            {"id": "toc-u4-t5", "name": "CFG to PDA construction with proof", "completed": false, "day": 78},
+            {"id": "toc-u4-t6", "name": "Equivalence of PDA and CFG", "completed": false, "day": 80},
+            {"id": "toc-u4-t7", "name": "Intersection of CFLs and Regular language", "completed": false, "day": 82},
+            {"id": "toc-u4-t8", "name": "Pumping lemma for CFLs", "completed": false, "day": 85},
+            {"id": "toc-u4-t9", "name": "Non-Context Free Languages, Chomsky hierarchy", "completed": false, "day": 87}
+          ]
+        },
+        {
+          "id": "toc-u5",
+          "name": "Unit 5: Turing Machines",
+          "hours": 5,
+          "topics": [
+            {"id": "toc-u5-t1", "name": "Basic TM model, definition, representation", "completed": false, "day": 89},
+            {"id": "toc-u5-t2", "name": "Instantaneous Description, Language acceptance", "completed": false, "day": 92},
+            {"id": "toc-u5-t3", "name": "TM variants: Two-way/One-way infinite tape", "completed": false, "day": 94},
+            {"id": "toc-u5-t4", "name": "Multi-tape TM, Non-deterministic TM", "completed": false, "day": 96},
+            {"id": "toc-u5-t5", "name": "Universal Turing Machines", "completed": false, "day": 97},
+            {"id": "toc-u5-t6", "name": "TM as enumerator", "completed": false, "day": 98},
+            {"id": "toc-u5-t7", "name": "Recursive and Recursively Enumerable languages", "completed": false, "day": 99},
+            {"id": "toc-u5-t8", "name": "Closure properties of R and RE", "completed": false, "day": 100}
+          ]
+        },
+        {
+          "id": "toc-u6",
+          "name": "Unit 6: Introduction to Undecidability",
+          "hours": 4,
+          "topics": [
+            {"id": "toc-u6-t1", "name": "Church-Turing Thesis and notion of Algorithm", "completed": false, "day": 90},
+            {"id": "toc-u6-t2", "name": "Encoding for TMs and countability", "completed": false, "day": 93},
+            {"id": "toc-u6-t3", "name": "Turing unrecognizable languages via Cantor's diagonalization", "completed": false, "day": 95},
+            {"id": "toc-u6-t4", "name": "Undecidability of Halting problem", "completed": false, "day": 97},
+            {"id": "toc-u6-t5", "name": "Post Correspondence Problem, Hilbert's 10th Problem", "completed": false, "day": 99},
+            {"id": "toc-u6-t6", "name": "Tiling problem, Turing unrecognizable examples", "completed": false, "day": 100},
+            {"id": "toc-u6-t7", "name": "Decision properties of R, RE languages", "completed": false, "day": 100}
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "id": "os",
+      "name": "Operating Systems",
+      "shortName": "OS",
+      "color": "#00ff88",
+      "totalHours": 28,
+      "priority": "high",
+      "units": [
+        {
+          "id": "os-u1",
+          "name": "Unit 1: Introduction to OS",
+          "hours": 4,
+          "topics": [
+            {"id": "os-u1-t1", "name": "What is OS, Interaction of OS and hardware", "completed": false, "day": 1},
+            {"id": "os-u1-t2", "name": "Goals of OS, Basic functions of OS", "completed": false, "day": 4},
+            {"id": "os-u1-t3", "name": "OS Services, System Calls, Types of system calls", "completed": false, "day": 6},
+            {"id": "os-u1-t4", "name": "Types of OS: Batch, Multiprogramming, Time sharing", "completed": false, "day": 9},
+            {"id": "os-u1-t5", "name": "Parallel, Distributed & Real-time OS", "completed": false, "day": 11}
+          ]
+        },
+        {
+          "id": "os-u2",
+          "name": "Unit 2: Process Management",
+          "hours": 6,
+          "topics": [
+            {"id": "os-u2-t1", "name": "Process Concept, Process States: 2, 5, 7 state models", "completed": false, "day": 13},
+            {"id": "os-u2-t2", "name": "Process Description, Process Control", "completed": false, "day": 16},
+            {"id": "os-u2-t3", "name": "Threads: Multithreading models", "completed": false, "day": 18},
+            {"id": "os-u2-t4", "name": "Thread implementations - user level and kernel level", "completed": false, "day": 20},
+            {"id": "os-u2-t5", "name": "Symmetric Multiprocessing", "completed": false, "day": 23},
+            {"id": "os-u2-t6", "name": "Concurrency: Issues and Principles", "completed": false, "day": 25},
+            {"id": "os-u2-t7", "name": "Mutual Exclusion: H/W and S/W approaches", "completed": false, "day": 27},
+            {"id": "os-u2-t8", "name": "Semaphores, Mutex and Monitors", "completed": false, "day": 30},
+            {"id": "os-u2-t9", "name": "Readers-Writers problem", "completed": false, "day": 32},
+            {"id": "os-u2-t10", "name": "Producer Consumer problem", "completed": false, "day": 34},
+            {"id": "os-u2-t11", "name": "Dining Philosopher problem", "completed": false, "day": 37}
+          ]
+        },
+        {
+          "id": "os-u3",
+          "name": "Unit 3: Process Scheduling",
+          "hours": 4,
+          "topics": [
+            {"id": "os-u3-t1", "name": "Scheduling Criteria", "completed": false, "day": 39},
+            {"id": "os-u3-t2", "name": "Types of Scheduling: Pre-emptive, Non pre-emptive", "completed": false, "day": 41},
+            {"id": "os-u3-t3", "name": "Long-term, Medium-term, Short-term scheduling", "completed": false, "day": 44},
+            {"id": "os-u3-t4", "name": "FCFS and SJF Algorithms", "completed": false, "day": 46},
+            {"id": "os-u3-t5", "name": "Round Robin Algorithm", "completed": false, "day": 48},
+            {"id": "os-u3-t6", "name": "Priority Scheduling", "completed": false, "day": 51}
+          ]
+        },
+        {
+          "id": "os-u4",
+          "name": "Unit 4: Deadlocks",
+          "hours": 4,
+          "topics": [
+            {"id": "os-u4-t1", "name": "Principles of deadlock", "completed": false, "day": 53},
+            {"id": "os-u4-t2", "name": "Deadlock Prevention", "completed": false, "day": 55},
+            {"id": "os-u4-t3", "name": "Deadlock Avoidance (Banker's Algorithm)", "completed": false, "day": 58},
+            {"id": "os-u4-t4", "name": "Deadlock Detection", "completed": false, "day": 60},
+            {"id": "os-u4-t5", "name": "Deadlock Recovery", "completed": false, "day": 62}
+          ]
+        },
+        {
+          "id": "os-u5",
+          "name": "Unit 5: Memory Management",
+          "hours": 6,
+          "topics": [
+            {"id": "os-u5-t1", "name": "Fixed and Dynamic Partitioning", "completed": false, "day": 65},
+            {"id": "os-u5-t2", "name": "Buddy Systems, Fragmentation", "completed": false, "day": 67},
+            {"id": "os-u5-t3", "name": "Paging and Segmentation basics", "completed": false, "day": 69},
+            {"id": "os-u5-t4", "name": "Address translation", "completed": false, "day": 72},
+            {"id": "os-u5-t5", "name": "Placement Strategies: First Fit, Best Fit, Next Fit, Worst Fit", "completed": false, "day": 74},
+            {"id": "os-u5-t6", "name": "Virtual Memory Concepts, Swapping", "completed": false, "day": 76},
+            {"id": "os-u5-t7", "name": "VM with Paging, Page Table Structure", "completed": false, "day": 79},
+            {"id": "os-u5-t8", "name": "Inverted Page Table, TLB", "completed": false, "day": 81},
+            {"id": "os-u5-t9", "name": "Page Replacement: FIFO, LRU", "completed": false, "day": 83},
+            {"id": "os-u5-t10", "name": "Optimal and Clock Page Replacement", "completed": false, "day": 86},
+            {"id": "os-u5-t11", "name": "Thrashing", "completed": false, "day": 88}
+          ]
+        },
+        {
+          "id": "os-u6",
+          "name": "Unit 6: I/O and File Management",
+          "hours": 4,
+          "topics": [
+            {"id": "os-u6-t1", "name": "I/O Devices - Types, Characteristics", "completed": false, "day": 90},
+            {"id": "os-u6-t2", "name": "OS design issues for I/O, I/O Buffering", "completed": false, "day": 93},
+            {"id": "os-u6-t3", "name": "Disk Scheduling: FCFS, SCAN, C-SCAN, SSTF", "completed": false, "day": 95},
+            {"id": "os-u6-t4", "name": "File Management Concepts, File Organization", "completed": false, "day": 97},
+            {"id": "os-u6-t5", "name": "File Directories, File Sharing", "completed": false, "day": 99},
+            {"id": "os-u6-t6", "name": "Secondary Storage, Free Space management, Security", "completed": false, "day": 100}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "se",
+      "name": "Software Engineering",
+      "shortName": "SE",
+      "color": "#ff6b35",
+      "totalHours": 27,
+      "priority": "high",
+      "units": [
+        {
+          "id": "se-u1",
+          "name": "Unit 1: Introduction to Software Engineering",
+          "hours": 4,
+          "topics": [
+            {"id": "se-u1-t1", "name": "Nature and scope of software engineering", "completed": false, "day": 2},
+            {"id": "se-u1-t2", "name": "Software characteristics and application domains", "completed": false, "day": 4},
+            {"id": "se-u1-t3", "name": "SDLC models: Waterfall, Spiral", "completed": false, "day": 8},
+            {"id": "se-u1-t4", "name": "Incremental, Rapid Application Development", "completed": false, "day": 11},
+            {"id": "se-u1-t5", "name": "Agile methodology: Scrum, roles, artifacts", "completed": false, "day": 15}
+          ]
+        },
+        {
+          "id": "se-u2",
+          "name": "Unit 2: Requirements Engineering",
+          "hours": 4,
+          "topics": [
+            {"id": "se-u2-t1", "name": "Functional vs Non-functional requirements", "completed": false, "day": 18},
+            {"id": "se-u2-t2", "name": "Requirement elicitation techniques", "completed": false, "day": 22},
+            {"id": "se-u2-t3", "name": "Requirement analysis - MoSCoW technique", "completed": false, "day": 25},
+            {"id": "se-u2-t4", "name": "Writing SRS Document", "completed": false, "day": 29},
+            {"id": "se-u2-t5", "name": "Use case modeling", "completed": false, "day": 32}
+          ]
+        },
+        {
+          "id": "se-u3",
+          "name": "Unit 3: Software Design and Principles",
+          "hours": 4,
+          "topics": [
+            {"id": "se-u3-t1", "name": "High-level vs Software Design", "completed": false, "day": 36},
+            {"id": "se-u3-t2", "name": "Design principles: modularity, cohesion, coupling", "completed": false, "day": 39},
+            {"id": "se-u3-t3", "name": "Abstraction and reusability", "completed": false, "day": 43},
+            {"id": "se-u3-t4", "name": "High-level and Low-level design", "completed": false, "day": 46},
+            {"id": "se-u3-t5", "name": "Characteristics of good design, Design patterns", "completed": false, "day": 50}
+          ]
+        },
+        {
+          "id": "se-u4",
+          "name": "Unit 4: Structural Modeling using UML",
+          "hours": 6,
+          "topics": [
+            {"id": "se-u4-t1", "name": "Object-Oriented Modeling basics", "completed": false, "day": 53},
+            {"id": "se-u4-t2", "name": "Class diagram: classes, attributes, methods", "completed": false, "day": 57},
+            {"id": "se-u4-t3", "name": "Associations, multiplicity", "completed": false, "day": 60},
+            {"id": "se-u4-t4", "name": "Object diagram", "completed": false, "day": 64},
+            {"id": "se-u4-t5", "name": "Use case diagram", "completed": false, "day": 67},
+            {"id": "se-u4-t6", "name": "Relationships: generalization, aggregation, composition", "completed": false, "day": 71},
+            {"id": "se-u4-t7", "name": "Hands-on UML tools practice", "completed": false, "day": 74}
+          ]
+        },
+        {
+          "id": "se-u5",
+          "name": "Unit 5: Behavioral Modeling using UML",
+          "hours": 6,
+          "topics": [
+            {"id": "se-u5-t1", "name": "Sequence diagram: object interactions", "completed": false, "day": 78},
+            {"id": "se-u5-t2", "name": "Message flow in sequence diagrams", "completed": false, "day": 81},
+            {"id": "se-u5-t3", "name": "Activity diagram: workflows and control flow", "completed": false, "day": 85},
+            {"id": "se-u5-t4", "name": "State diagram: system behavior modeling", "completed": false, "day": 88},
+            {"id": "se-u5-t5", "name": "Component and Deployment diagrams", "completed": false, "day": 92},
+            {"id": "se-u5-t6", "name": "Hands-on behavioral modeling practice", "completed": false, "day": 95}
+          ]
+        },
+        {
+          "id": "se-u6",
+          "name": "Unit 6: Software Project Management",
+          "hours": 3,
+          "topics": [
+            {"id": "se-u6-t1", "name": "Project planning and scheduling (Gantt, PERT)", "completed": false, "day": 97},
+            {"id": "se-u6-t2", "name": "Software cost estimation (FP, UCP)", "completed": false, "day": 99},
+            {"id": "se-u6-t3", "name": "Risk management and mitigation", "completed": false, "day": 100},
+            {"id": "se-u6-t4", "name": "Quality assurance, Tools: Trello, JIRA", "completed": false, "day": 100}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ds",
+      "name": "Data Structures",
+      "shortName": "DS",
+      "color": "#ff3366",
+      "totalHours": 30,
+      "priority": "high",
+      "units": [
+        {
+          "id": "ds-u1",
+          "name": "Unit 1: Arrays",
+          "hours": 4,
+          "topics": [
+            {"id": "ds-u1-t1", "name": "Asymptotic Notations, Time and Space Complexity", "completed": false, "day": 1},
+            {"id": "ds-u1-t2", "name": "Memory Representation of Arrays", "completed": false, "day": 5},
+            {"id": "ds-u1-t3", "name": "Multidimensional arrays, Sparse Matrix", "completed": false, "day": 9},
+            {"id": "ds-u1-t4", "name": "Linear Search, Binary Search with Analysis", "completed": false, "day": 13},
+            {"id": "ds-u1-t5", "name": "Bubble Sort, Insertion Sort", "completed": false, "day": 16},
+            {"id": "ds-u1-t6", "name": "Merge Sort with Analysis", "completed": false, "day": 20},
+            {"id": "ds-u1-t7", "name": "Quick Sort with Analysis", "completed": false, "day": 23}
+          ]
+        },
+        {
+          "id": "ds-u2",
+          "name": "Unit 2: Linked Lists",
+          "hours": 4,
+          "topics": [
+            {"id": "ds-u2-t1", "name": "Dynamic memory allocation", "completed": false, "day": 27},
+            {"id": "ds-u2-t2", "name": "Singly Linked Lists", "completed": false, "day": 30},
+            {"id": "ds-u2-t3", "name": "Doubly Linked Lists", "completed": false, "day": 34},
+            {"id": "ds-u2-t4", "name": "Circular Linked Lists", "completed": false, "day": 37},
+            {"id": "ds-u2-t5", "name": "Generalized Linked Lists", "completed": false, "day": 41},
+            {"id": "ds-u2-t6", "name": "Applications, Introduction to Vectors", "completed": false, "day": 44}
+          ]
+        },
+        {
+          "id": "ds-u3",
+          "name": "Unit 3: Stacks and Queues",
+          "hours": 6,
+          "topics": [
+            {"id": "ds-u3-t1", "name": "Stack representation using arrays", "completed": false, "day": 48},
+            {"id": "ds-u3-t2", "name": "Stack using Linked Lists", "completed": false, "day": 51},
+            {"id": "ds-u3-t3", "name": "Recursion applications", "completed": false, "day": 55},
+            {"id": "ds-u3-t4", "name": "Expression conversions (Infix, Postfix, Prefix)", "completed": false, "day": 58},
+            {"id": "ds-u3-t5", "name": "Expression evaluation", "completed": false, "day": 62},
+            {"id": "ds-u3-t6", "name": "Queue representation using array and LL", "completed": false, "day": 65},
+            {"id": "ds-u3-t7", "name": "Types of queue (Circular, Priority, Deque)", "completed": false, "day": 69},
+            {"id": "ds-u3-t8", "name": "Applications: Job Scheduling, Josephus problem", "completed": false, "day": 72}
+          ]
+        },
+        {
+          "id": "ds-u4",
+          "name": "Unit 4: Trees",
+          "hours": 7,
+          "topics": [
+            {"id": "ds-u4-t1", "name": "Tree terminology, array representation", "completed": false, "day": 76},
+            {"id": "ds-u4-t2", "name": "Linked representation of trees", "completed": false, "day": 79},
+            {"id": "ds-u4-t3", "name": "Recursive Tree Traversals (Inorder, Preorder, Postorder)", "completed": false, "day": 83},
+            {"id": "ds-u4-t4", "name": "Non-recursive traversals", "completed": false, "day": 86},
+            {"id": "ds-u4-t5", "name": "Operations on Binary Tree", "completed": false, "day": 89},
+            {"id": "ds-u4-t6", "name": "Binary Search Trees (BST) - Insertion", "completed": false, "day": 93},
+            {"id": "ds-u4-t7", "name": "BST - Deletion and Search", "completed": false, "day": 96}
+          ]
+        },
+        {
+          "id": "ds-u5",
+          "name": "Unit 5: Graphs",
+          "hours": 7,
+          "topics": [
+            {"id": "ds-u5-t1", "name": "Graph terminology", "completed": false, "day": 3},
+            {"id": "ds-u5-t2", "name": "Adjacency Matrix representation", "completed": false, "day": 10},
+            {"id": "ds-u5-t3", "name": "Adjacency Lists representation", "completed": false, "day": 17},
+            {"id": "ds-u5-t4", "name": "BFS Traversal and Applications", "completed": false, "day": 24},
+            {"id": "ds-u5-t5", "name": "DFS Traversal and Applications", "completed": false, "day": 31},
+            {"id": "ds-u5-t6", "name": "Connected graph, Bipartite Graph", "completed": false, "day": 38},
+            {"id": "ds-u5-t7", "name": "Detecting Cycle in graph", "completed": false, "day": 45},
+            {"id": "ds-u5-t8", "name": "Prim's Algorithm for MST", "completed": false, "day": 52},
+            {"id": "ds-u5-t9", "name": "Kruskal's Algorithm for MST", "completed": false, "day": 59},
+            {"id": "ds-u5-t10", "name": "Shortest Path Algorithms, Union Find", "completed": false, "day": 66}
+          ]
+        },
+        {
+          "id": "ds-u6",
+          "name": "Unit 6: Hashing",
+          "hours": 2,
+          "topics": [
+            {"id": "ds-u6-t1", "name": "Hashing techniques, Hash table", "completed": false, "day": 98},
+            {"id": "ds-u6-t2", "name": "Hash functions", "completed": false, "day": 99},
+            {"id": "ds-u6-t3", "name": "Collision handling and resolution techniques", "completed": false, "day": 100}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mad",
+      "name": "Mobile Application Development",
+      "shortName": "MAD",
+      "color": "#ffcc00",
+      "totalHours": 20,
+      "priority": "high",
+      "units": [
+        {
+          "id": "mad-lab1",
+          "name": "Lab 1: Introduction to Flutter & Dart",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l1-t1", "name": "Setting up Flutter SDK and IDE", "completed": false, "day": 2},
+            {"id": "mad-l1-t2", "name": "Running first Flutter app: Hello World", "completed": false, "day": 6},
+            {"id": "mad-l1-t3", "name": "Dart basics: variables, functions, control structures", "completed": false, "day": 10}
+          ]
+        },
+        {
+          "id": "mad-lab2",
+          "name": "Lab 2: Flutter Project Structure & Widgets",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l2-t1", "name": "Project folders: pubspec.yaml, main.dart", "completed": false, "day": 14},
+            {"id": "mad-l2-t2", "name": "Stateless and Stateful widgets", "completed": false, "day": 19},
+            {"id": "mad-l2-t3", "name": "Basic UI: Text, Container, Row, Column", "completed": false, "day": 24}
+          ]
+        },
+        {
+          "id": "mad-lab3",
+          "name": "Lab 3: Layouts and Styling",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l3-t1", "name": "Layout widgets: Stack, Expanded, SizedBox", "completed": false, "day": 28},
+            {"id": "mad-l3-t2", "name": "Styling: themes, colors, fonts", "completed": false, "day": 33},
+            {"id": "mad-l3-t3", "name": "Designing a login screen", "completed": false, "day": 38}
+          ]
+        },
+        {
+          "id": "mad-lab4",
+          "name": "Lab 4: User Input & Forms",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l4-t1", "name": "TextField for user input", "completed": false, "day": 43},
+            {"id": "mad-l4-t2", "name": "Form and TextFormField", "completed": false, "day": 48},
+            {"id": "mad-l4-t3", "name": "Input validation", "completed": false, "day": 53}
+          ]
+        },
+        {
+          "id": "mad-lab5",
+          "name": "Lab 5: Navigation and Routing",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l5-t1", "name": "Navigator for screen navigation", "completed": false, "day": 58},
+            {"id": "mad-l5-t2", "name": "Passing data between screens", "completed": false, "day": 63},
+            {"id": "mad-l5-t3", "name": "Multi-page app implementation", "completed": false, "day": 68}
+          ]
+        },
+        {
+          "id": "mad-lab6",
+          "name": "Lab 6: State Management Basics",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l6-t1", "name": "State management: setState, Stateful widgets", "completed": false, "day": 73},
+            {"id": "mad-l6-t2", "name": "Handling user interactions", "completed": false, "day": 78},
+            {"id": "mad-l6-t3", "name": "Building a counter app", "completed": false, "day": 83}
+          ]
+        },
+        {
+          "id": "mad-lab7",
+          "name": "Lab 7: Lists and Dynamic Content",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l7-t1", "name": "ListView and ListView.builder", "completed": false, "day": 88},
+            {"id": "mad-l7-t2", "name": "Card widget for item cards", "completed": false, "day": 93}
+          ]
+        },
+        {
+          "id": "mad-lab8",
+          "name": "Lab 8: Fetching Data from APIs",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l8-t1", "name": "HTTP package for network requests", "completed": false, "day": 96},
+            {"id": "mad-l8-t2", "name": "Fetching and displaying API data", "completed": false, "day": 98},
+            {"id": "mad-l8-t3", "name": "JSON parsing in Flutter", "completed": false, "day": 100}
+          ]
+        },
+        {
+          "id": "mad-lab9",
+          "name": "Lab 9: Local Data Storage",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l9-t1", "name": "shared_preferences package", "completed": false, "day": 73},
+            {"id": "mad-l9-t2", "name": "Storing and retrieving data", "completed": false, "day": 80},
+            {"id": "mad-l9-t3", "name": "Offline support basics", "completed": false, "day": 87}
+          ]
+        },
+        {
+          "id": "mad-lab10",
+          "name": "Lab 10: Final App Build and Deployment",
+          "hours": 2,
+          "topics": [
+            {"id": "mad-l10-t1", "name": "Mini project development", "completed": false, "day": 91},
+            {"id": "mad-l10-t2", "name": "Building APK for deployment", "completed": false, "day": 96},
+            {"id": "mad-l10-t3", "name": "Debugging and best practices", "completed": false, "day": 100}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "basics",
+      "name": "Programming Fundamentals",
+      "shortName": "Basics",
+      "color": "#a855f7",
+      "totalHours": 15,
+      "priority": "medium",
+      "units": [
+        {
+          "id": "basics-cpp",
+          "name": "C++ Fundamentals",
+          "hours": 8,
+          "topics": [
+            {"id": "basics-cpp-t1", "name": "C++ syntax, variables, data types", "completed": false, "day": 2},
+            {"id": "basics-cpp-t2", "name": "Control structures (if, loops)", "completed": false, "day": 7},
+            {"id": "basics-cpp-t3", "name": "Functions and recursion", "completed": false, "day": 12},
+            {"id": "basics-cpp-t4", "name": "Arrays and strings", "completed": false, "day": 21},
+            {"id": "basics-cpp-t5", "name": "Pointers and references", "completed": false, "day": 35},
+            {"id": "basics-cpp-t6", "name": "OOP: Classes and objects", "completed": false, "day": 49},
+            {"id": "basics-cpp-t7", "name": "OOP: Inheritance and polymorphism", "completed": false, "day": 63},
+            {"id": "basics-cpp-t8", "name": "STL basics: vector, map, set", "completed": false, "day": 77}
+          ]
+        },
+        {
+          "id": "basics-git",
+          "name": "Git & GitHub",
+          "hours": 7,
+          "topics": [
+            {"id": "basics-git-t1", "name": "Git installation and configuration", "completed": false, "day": 3},
+            {"id": "basics-git-t2", "name": "Basic commands: init, add, commit", "completed": false, "day": 14},
+            {"id": "basics-git-t3", "name": "Branching and merging", "completed": false, "day": 28},
+            {"id": "basics-git-t4", "name": "Remote repositories and GitHub", "completed": false, "day": 42},
+            {"id": "basics-git-t5", "name": "Pull requests and collaboration", "completed": false, "day": 56},
+            {"id": "basics-git-t6", "name": "Git workflow strategies", "completed": false, "day": 70},
+            {"id": "basics-git-t7", "name": "GitHub Pages deployment", "completed": false, "day": 84}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cybersec",
+      "name": "Cybersecurity Fundamentals",
+      "shortName": "CyberSec",
+      "color": "#ef4444",
+      "totalHours": 20,
+      "priority": "low",
+      "units": [
+        {
+          "id": "cybersec-u1",
+          "name": "Introduction to Cybersecurity",
+          "hours": 4,
+          "topics": [
+            {"id": "cybersec-u1-t1", "name": "CIA Triad: Confidentiality, Integrity, Availability", "completed": false, "day": 7},
+            {"id": "cybersec-u1-t2", "name": "Types of cyber threats and attacks", "completed": false, "day": 21},
+            {"id": "cybersec-u1-t3", "name": "Security principles and best practices", "completed": false, "day": 35},
+            {"id": "cybersec-u1-t4", "name": "Introduction to ethical hacking", "completed": false, "day": 49}
+          ]
+        },
+        {
+          "id": "cybersec-u2",
+          "name": "Network Security",
+          "hours": 5,
+          "topics": [
+            {"id": "cybersec-u2-t1", "name": "Networking basics: TCP/IP, OSI model", "completed": false, "day": 14},
+            {"id": "cybersec-u2-t2", "name": "Firewalls and IDS/IPS", "completed": false, "day": 28},
+            {"id": "cybersec-u2-t3", "name": "VPNs and secure tunneling", "completed": false, "day": 42},
+            {"id": "cybersec-u2-t4", "name": "Network scanning with Nmap", "completed": false, "day": 56},
+            {"id": "cybersec-u2-t5", "name": "Wireshark packet analysis", "completed": false, "day": 70}
+          ]
+        },
+        {
+          "id": "cybersec-u3",
+          "name": "Web Security",
+          "hours": 5,
+          "topics": [
+            {"id": "cybersec-u3-t1", "name": "OWASP Top 10 vulnerabilities", "completed": false, "day": 63},
+            {"id": "cybersec-u3-t2", "name": "SQL Injection basics", "completed": false, "day": 77},
+            {"id": "cybersec-u3-t3", "name": "XSS (Cross-Site Scripting)", "completed": false, "day": 84},
+            {"id": "cybersec-u3-t4", "name": "CSRF and authentication attacks", "completed": false, "day": 91},
+            {"id": "cybersec-u3-t5", "name": "Secure coding practices", "completed": false, "day": 98}
+          ]
+        },
+        {
+          "id": "cybersec-u4",
+          "name": "Cryptography Basics",
+          "hours": 4,
+          "topics": [
+            {"id": "cybersec-u4-t1", "name": "Symmetric encryption (AES, DES)", "completed": false, "day": 35},
+            {"id": "cybersec-u4-t2", "name": "Asymmetric encryption (RSA)", "completed": false, "day": 49},
+            {"id": "cybersec-u4-t3", "name": "Hash functions and digital signatures", "completed": false, "day": 63},
+            {"id": "cybersec-u4-t4", "name": "SSL/TLS and HTTPS", "completed": false, "day": 77}
+          ]
+        },
+        {
+          "id": "cybersec-u5",
+          "name": "Linux & CTF",
+          "hours": 2,
+          "topics": [
+            {"id": "cybersec-u5-t1", "name": "Linux command line for security", "completed": false, "day": 56},
+            {"id": "cybersec-u5-t2", "name": "Introduction to CTF challenges", "completed": false, "day": 91}
+          ]
+        }
+      ]
+    }
+  ],
+  "schedule": {
+    "bufferDays": [7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 91],
+    "note": "Buffer days for catch-up or revision. Cybersecurity topics are also placed on these days."
+  }
 }
