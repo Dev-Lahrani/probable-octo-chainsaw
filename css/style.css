@@ -103,6 +103,7 @@
     background: var(--primary);
     transform: scaleX(0);
     transition: transform 0.3s ease;
+    pointer-events: none;
 }
 
 .user-card.medical::before {

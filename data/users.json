@@ -2,9 +2,9 @@
     "users": [
         {
             "id": "user1",
-            "name": "DSA Mastery",
-            "description": "100 Days of Data Structures & Algorithms",
-            "icon": "💻",
+            "name": "Engineering",
+            "description": "100 Days of Engineering Studies",
+            "icon": "⚙️",
             "syllabusFile": "syllabus.json",
             "questionsFile": "questions.json",
             "theme": "primary",
