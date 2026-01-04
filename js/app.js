@@ -3,9 +3,20 @@ let syllabusData = null;
 let completionData = {};
 let questionsData = null;
 let quizAttempts = {};
-const LOCAL_STORAGE_KEY = 'syllabus_completion_data';
-const SYNC_CONFIG_KEY = 'syllabus_sync_config';
-const QUIZ_ATTEMPTS_KEY = 'syllabus_quiz_attempts';
+let usersData = null;
+let currentUser = null;
+
+// Dynamic storage keys based on current user
+function getStorageKey(baseKey) {
+    const userId = currentUser?.id || 'default';
+    return `${userId}_${baseKey}`;
+}
+
+const BASE_LOCAL_STORAGE_KEY = 'syllabus_completion_data';
+const BASE_SYNC_CONFIG_KEY = 'syllabus_sync_config';
+const BASE_QUIZ_ATTEMPTS_KEY = 'syllabus_quiz_attempts';
+const BASE_ANALYTICS_KEY = 'syllabus_analytics';
+const CURRENT_USER_KEY = 'syllabus_current_user';
 
 // Quiz state
 let currentQuiz = {
@@ -19,7 +30,6 @@ let currentQuiz = {
 };
 
 // Analytics data
-const ANALYTICS_KEY = 'syllabus_analytics';
 let analyticsData = {
     totalQuizzesTaken: 0,
     totalQuestionAnswered: 0,
@@ -39,18 +49,130 @@ let syncConfig = {
 
 // ===== Initialize App =====
 document.addEventListener('DOMContentLoaded', async () => {
+    await loadUsersData();
+    checkForExistingUser();
+});
+
+// ===== User Management =====
+async function loadUsersData() {
+    try {
+        const response = await fetch('data/users.json');
+        usersData = await response.json();
+        renderUserSelection();
+    } catch (error) {
+        console.error('Error loading users data:', error);
+        // Fallback to single user mode
+        usersData = {
+            users: [{
+                id: "user1",
+                name: "DSA Mastery",
+                description: "100 Days of Data Structures & Algorithms",
+                icon: "💻",
+                syllabusFile: "syllabus.json",
+                questionsFile: "questions.json",
+                theme: "primary",
+                totalDays: 100
+            }]
+        };
+        renderUserSelection();
+    }
+}
+
+function checkForExistingUser() {
+    const savedUserId = localStorage.getItem(CURRENT_USER_KEY);
+    if (savedUserId && usersData) {
+        const user = usersData.users.find(u => u.id === savedUserId);
+        if (user) {
+            selectUser(user.id);
+            return;
+        }
+    }
+    // Show user selection page
+    showUserSelectionPage();
+}
+
+function showUserSelectionPage() {
+    document.getElementById('userSelectionPage').style.display = 'flex';
+    document.getElementById('mainApp').style.display = 'none';
+}
+
+function showMainApp() {
+    document.getElementById('userSelectionPage').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+}
+
+function renderUserSelection() {
+    const container = document.getElementById('userCardsGrid');
+    if (!container || !usersData) return;
+    
+    container.innerHTML = usersData.users.map(user => `
+        <div class="user-card ${user.theme}" onclick="selectUser('${user.id}')">
+            <div class="user-card-icon">${user.icon}</div>
+            <div class="user-card-info">
+                <h3>${user.name}</h3>
+                <p>${user.description}</p>
+                <span class="user-card-days">${user.totalDays} Days</span>
+            </div>
+            <div class="user-card-progress" id="userProgress_${user.id}">
+                <div class="user-progress-bar"></div>
+            </div>
+        </div>
+    `).join('');
+    
+    // Load and display progress for each user
+    usersData.users.forEach(user => {
+        const storageKey = `${user.id}_${BASE_LOCAL_STORAGE_KEY}`;
+        const stored = localStorage.getItem(storageKey);
+        if (stored) {
+            const data = JSON.parse(stored);
+            const completedCount = Object.values(data).filter(v => v).length;
+            // Update progress bar (rough estimate)
+            const progressEl = document.getElementById(`userProgress_${user.id}`);
+            if (progressEl) {
+                const bar = progressEl.querySelector('.user-progress-bar');
+                if (bar) {
+                    bar.style.width = `${Math.min(completedCount, 100)}%`;
+                }
+            }
+        }
+    });
+}
+
+async function selectUser(userId) {
+    const user = usersData.users.find(u => u.id === userId);
+    if (!user) return;
+    
+    currentUser = user;
+    localStorage.setItem(CURRENT_USER_KEY, userId);
+    
+    // Update UI with user icon
+    const iconEl = document.getElementById('currentUserIcon');
+    if (iconEl) {
+        iconEl.textContent = user.icon;
+    }
+    
+    // Load user-specific data
     await loadSyllabusData();
     await loadQuestionsData();
     loadLocalData();
     await attemptCloudSync();
     initializeApp();
     setupEventListeners();
-});
+    
+    showMainApp();
+}
+
+function switchUser() {
+    localStorage.removeItem(CURRENT_USER_KEY);
+    showUserSelectionPage();
+    renderUserSelection();
+}
 
 // ===== Data Loading =====
 async function loadSyllabusData() {
     try {
-        const response = await fetch('data/syllabus.json');
+        const syllabusFile = currentUser?.syllabusFile || 'syllabus.json';
+        const response = await fetch(`data/${syllabusFile}`);
         syllabusData = await response.json();
     } catch (error) {
         console.error('Error loading syllabus data:', error);
@@ -60,7 +182,8 @@ async function loadSyllabusData() {
 
 async function loadQuestionsData() {
     try {
-        const response = await fetch('data/questions.json');
+        const questionsFile = currentUser?.questionsFile || 'questions.json';
+        const response = await fetch(`data/${questionsFile}`);
         questionsData = await response.json();
     } catch (error) {
         console.error('Error loading questions data:', error);
@@ -88,36 +211,54 @@ function getDefaultQuestions() {
 }
 
 function loadLocalData() {
-    // Load completion data
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+    // Reset data first
+    completionData = {};
+    quizAttempts = {};
+    analyticsData = {
+        totalQuizzesTaken: 0,
+        totalQuestionAnswered: 0,
+        correctByDifficulty: { easy: 0, medium: 0, hard: 0 },
+        totalByDifficulty: { easy: 0, medium: 0, hard: 0 },
+        topicAttempts: {},
+        studyTime: 0
+    };
+    syncConfig = {
+        binId: null,
+        apiKey: null,
+        lastSync: null,
+        autoSync: true
+    };
+    
+    // Load completion data (user-specific)
+    const stored = localStorage.getItem(getStorageKey(BASE_LOCAL_STORAGE_KEY));
     if (stored) {
         completionData = JSON.parse(stored);
     }
     
-    // Load sync config
-    const syncStored = localStorage.getItem(SYNC_CONFIG_KEY);
+    // Load sync config (user-specific)
+    const syncStored = localStorage.getItem(getStorageKey(BASE_SYNC_CONFIG_KEY));
     if (syncStored) {
         syncConfig = { ...syncConfig, ...JSON.parse(syncStored) };
     }
     
-    // Load quiz attempts
-    const quizStored = localStorage.getItem(QUIZ_ATTEMPTS_KEY);
+    // Load quiz attempts (user-specific)
+    const quizStored = localStorage.getItem(getStorageKey(BASE_QUIZ_ATTEMPTS_KEY));
     if (quizStored) {
         quizAttempts = JSON.parse(quizStored);
     }
     
-    // Load analytics
-    const analyticsStored = localStorage.getItem(ANALYTICS_KEY);
+    // Load analytics (user-specific)
+    const analyticsStored = localStorage.getItem(getStorageKey(BASE_ANALYTICS_KEY));
     if (analyticsStored) {
         analyticsData = { ...analyticsData, ...JSON.parse(analyticsStored) };
     }
 }
 
 function saveLocalData() {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(completionData));
-    localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(syncConfig));
-    localStorage.setItem(QUIZ_ATTEMPTS_KEY, JSON.stringify(quizAttempts));
-    localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analyticsData));
+    localStorage.setItem(getStorageKey(BASE_LOCAL_STORAGE_KEY), JSON.stringify(completionData));
+    localStorage.setItem(getStorageKey(BASE_SYNC_CONFIG_KEY), JSON.stringify(syncConfig));
+    localStorage.setItem(getStorageKey(BASE_QUIZ_ATTEMPTS_KEY), JSON.stringify(quizAttempts));
+    localStorage.setItem(getStorageKey(BASE_ANALYTICS_KEY), JSON.stringify(analyticsData));
 }
 
 // ===== Cloud Sync Functions (JSONBin.io) =====
@@ -276,17 +417,21 @@ function updateSyncUI() {
 }
 
 // ===== Calculate Current Day =====
+function getTotalDays() {
+    return currentUser?.totalDays || syllabusData?.metadata?.totalDays || 100;
+}
+
 function getCurrentDay() {
     const today = new Date();
-    const startDate = new Date(syllabusData.metadata.startDate);
+    const startDate = new Date(syllabusData?.metadata?.startDate || Date.now());
     const diffTime = today - startDate;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return Math.max(1, Math.min(diffDays, 100));
+    return Math.max(1, Math.min(diffDays, getTotalDays()));
 }
 
 function getDaysLeft() {
     const currentDay = getCurrentDay();
-    return Math.max(0, 100 - currentDay);
+    return Math.max(0, getTotalDays() - currentDay);
 }
 
 // ===== Initialize UI =====
@@ -1559,3 +1704,5 @@ window.closeQuizModal = closeQuizModal;
 window.refreshUI = refreshUI;
 window.openAnalyticsModal = openAnalyticsModal;
 window.closeAnalyticsModal = closeAnalyticsModal;
+window.selectUser = selectUser;
+window.switchUser = switchUser;

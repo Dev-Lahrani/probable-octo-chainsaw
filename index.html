@@ -16,14 +16,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <span class="logo-icon">◈</span>
-                    <h1>SYLLABUS TRACKER</h1>
-                </div>
+    <!-- User Selection Landing Page -->
+    <div class="user-selection-page" id="userSelectionPage">
+        <div class="user-selection-container">
+            <div class="user-selection-header">
+                <span class="logo-icon">◈</span>
+                <h1>SYLLABUS TRACKER</h1>
+                <p class="user-selection-subtitle">Select your study profile to continue</p>
+            </div>
+            <div class="user-cards-grid" id="userCardsGrid">
+                <!-- User cards rendered dynamically -->
+            </div>
+            <div class="user-selection-footer">
+                <p>Each profile tracks progress independently</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container (hidden until user selected) -->
+    <div class="main-app" id="mainApp" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <span class="logo-icon">◈</span>
+                        <h1>SYLLABUS TRACKER</h1>
+                        <button class="switch-user-btn" onclick="switchUser()" title="Switch User">
+                            <span id="currentUserIcon">💻</span>
+                            <span class="switch-arrow">⇄</span>
+                        </button>
+                    </div>
                 <div class="header-stats">
                     <div class="stat-item">
                         <span class="stat-value" id="currentDay">D01</span>

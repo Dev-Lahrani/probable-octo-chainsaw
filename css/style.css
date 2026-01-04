@@ -7,6 +7,8 @@
     --danger: #ff3366;
     --success: #00ff88;
     --warning: #ffcc00;
+    --medical: #ff6b9d;
+    --medical-dim: #cc5580;
     
     --bg-primary: #0a0a0f;
     --bg-secondary: #12121a;
@@ -31,6 +33,177 @@
     
     --transition: all 0.15s ease;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ===== User Selection Page ===== */
+.user-selection-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--bg-primary);
+    padding: 2rem;
+}
+
+.user-selection-container {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+}
+
+.user-selection-header {
+    margin-bottom: 3rem;
+}
+
+.user-selection-header .logo-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.user-selection-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.user-selection-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.user-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.user-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.user-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.user-card.medical::before {
+    background: var(--medical);
+}
+
+.user-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.user-card.medical:hover {
+    border-color: var(--medical);
+}
+
+.user-card:hover::before {
+    transform: scaleX(1);
+}
+
+.user-card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.user-card-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.user-card-info p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.user-card-days {
+    display: inline-block;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+    color: var(--primary);
+}
+
+.user-card.medical .user-card-days {
+    color: var(--medical);
+}
+
+.user-card-progress {
+    margin-top: 1rem;
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.user-progress-bar {
+    height: 100%;
+    background: var(--primary);
+    width: 0;
+    transition: width 0.5s ease;
+}
+
+.user-card.medical .user-progress-bar {
+    background: var(--medical);
+}
+
+.user-selection-footer {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+/* ===== Switch User Button ===== */
+.switch-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.8rem;
+    margin-left: 0.75rem;
+}
+
+.switch-user-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.switch-user-btn .switch-arrow {
+    font-size: 0.7rem;
 }
 
 /* ===== Reset & Base ===== */
