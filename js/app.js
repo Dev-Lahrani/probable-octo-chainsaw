@@ -145,11 +145,11 @@ async function selectUser(userId) {
     currentUser = user;
     localStorage.setItem(CURRENT_USER_KEY, userId);
     
-    // Update UI with user icon
-    const iconEl = document.getElementById('currentUserIcon');
-    if (iconEl) {
-        iconEl.textContent = user.icon;
-    }
+    // Update sidebar user info
+    const sidebarIconEl = document.getElementById('sidebarUserIcon');
+    const sidebarNameEl = document.getElementById('sidebarUserName');
+    if (sidebarIconEl) sidebarIconEl.textContent = user.icon;
+    if (sidebarNameEl) sidebarNameEl.textContent = user.name;
     
     // Load user-specific data
     await loadSyllabusData();
@@ -448,14 +448,248 @@ function initializeApp() {
     if (!syncConfig.binId) {
         updateSyncStatus('local');
     }
+    
+    // Initialize sidebar
+    updateSidebarStats();
+    setupSidebarNavigation();
+}
+
+// ===== Sidebar Navigation =====
+let currentSection = 'dashboard';
+
+function setupSidebarNavigation() {
+    // Set initial active section
+    navigateTo('dashboard');
+    
+    // Update sidebar user info
+    const userNameEl = document.querySelector('.user-name');
+    if (userNameEl && currentUser) {
+        userNameEl.textContent = currentUser.name;
+    }
+    
+    // Update today's tasks badge
+    updateTodayBadge();
+}
+
+function navigateTo(section, event) {
+    if (event) {
+        event.preventDefault();
+    }
+    
+    currentSection = section;
+    
+    // Update nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const activeNav = document.querySelector(`[data-section="${section}"]`);
+    if (activeNav) {
+        activeNav.classList.add('active');
+    }
+    
+    // Update sections
+    document.querySelectorAll('.content-section').forEach(sec => {
+        sec.classList.remove('active');
+    });
+    const activeSection = document.getElementById(`section${section.charAt(0).toUpperCase() + section.slice(1)}`);
+    if (activeSection) {
+        activeSection.classList.add('active');
+    }
+    
+    // Close mobile sidebar
+    closeSidebar();
+    
+    // Update section-specific content
+    switch (section) {
+        case 'dashboard':
+            renderDashboard();
+            break;
+        case 'today':
+            renderTodaySection();
+            break;
+        case 'subjects':
+            renderSubjectCards();
+            break;
+        case 'schedule':
+            renderScheduleGrid();
+            break;
+        case 'analytics':
+            renderAnalytics();
+            break;
+    }
+}
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    
+    if (window.innerWidth <= 768) {
+        // Mobile: toggle open/close
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+    } else {
+        // Desktop: toggle collapsed state
+        sidebar.classList.toggle('collapsed');
+    }
+}
+
+function closeSidebar() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+    }
+}
+
+function updateSidebarStats() {
+    const stats = calculateOverallStats();
+    const streakEl = document.getElementById('sidebarStreak');
+    const progressEl = document.getElementById('sidebarProgress');
+    
+    if (streakEl) {
+        streakEl.textContent = calculateStreak() || '0';
+    }
+    if (progressEl) {
+        progressEl.textContent = `${stats.percentage}%`;
+    }
+}
+
+function updateTodayBadge() {
+    const badge = document.getElementById('todayBadge');
+    if (!badge) return;
+    
+    const currentDay = getCurrentDay();
+    let count = 0;
+    
+    syllabusData.subjects.forEach(subject => {
+        subject.units.forEach(unit => {
+            unit.topics.forEach(topic => {
+                if (topic.day === currentDay && !completionData[topic.id]) {
+                    count++;
+                }
+            });
+        });
+    });
+    
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function renderDashboard() {
+    // Update progress card
+    const stats = calculateOverallStats();
+    const progressPercentage = document.querySelector('.progress-percentage');
+    if (progressPercentage) {
+        progressPercentage.textContent = `${stats.percentage}%`;
+    }
+    
+    // Update stats grid
+    const completedEl = document.getElementById('dashCompleted');
+    const remainingEl = document.getElementById('dashRemaining');
+    const streakEl = document.getElementById('dashStreak');
+    const daysLeftEl = document.getElementById('dashDaysLeft');
+    
+    if (completedEl) completedEl.textContent = stats.completed;
+    if (remainingEl) remainingEl.textContent = stats.total - stats.completed;
+    if (streakEl) streakEl.textContent = calculateStreak() || '0';
+    if (daysLeftEl) daysLeftEl.textContent = getDaysLeft();
+    
+    // Update today preview
+    renderTodayPreview();
+    
+    // Update subjects preview
+    renderSubjectsPreview();
+}
+
+function renderTodayPreview() {
+    const container = document.querySelector('.today-preview');
+    if (!container) return;
+    
+    const currentDay = getCurrentDay();
+    const todayTopics = [];
+    
+    syllabusData.subjects.forEach(subject => {
+        subject.units.forEach(unit => {
+            unit.topics.forEach(topic => {
+                if (topic.day === currentDay) {
+                    todayTopics.push({
+                        ...topic,
+                        subjectName: subject.name,
+                        subjectColor: subject.color,
+                        completed: !!completionData[topic.id]
+                    });
+                }
+            });
+        });
+    });
+    
+    if (todayTopics.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No topics scheduled for today</p>';
+        return;
+    }
+    
+    const displayTopics = todayTopics.slice(0, 3);
+    container.innerHTML = displayTopics.map(topic => `
+        <div class="preview-item ${topic.completed ? 'completed' : ''}">
+            <span class="preview-status">${topic.completed ? '✓' : '○'}</span>
+            <span class="preview-text">${topic.title}</span>
+            <span class="preview-tag" style="color: ${topic.subjectColor}">${topic.subjectName.substring(0, 3)}</span>
+        </div>
+    `).join('');
+    
+    if (todayTopics.length > 3) {
+        container.innerHTML += `<p class="preview-more">+${todayTopics.length - 3} more</p>`;
+    }
+}
+
+function renderSubjectsPreview() {
+    const container = document.querySelector('.subjects-preview');
+    if (!container) return;
+    
+    const subjectStats = syllabusData.subjects.map(subject => {
+        let total = 0;
+        let completed = 0;
+        
+        subject.units.forEach(unit => {
+            unit.topics.forEach(topic => {
+                total++;
+                if (completionData[topic.id]) completed++;
+            });
+        });
+        
+        return {
+            name: subject.name,
+            color: subject.color,
+            progress: total > 0 ? Math.round((completed / total) * 100) : 0
+        };
+    });
+    
+    container.innerHTML = subjectStats.slice(0, 4).map(subject => `
+        <div class="preview-item">
+            <span class="preview-dot" style="background: ${subject.color}"></span>
+            <span class="preview-text">${subject.name}</span>
+            <span class="preview-progress">${subject.progress}%</span>
+        </div>
+    `).join('');
 }
 
 function updateStreakCounter() {
     const streak = calculateStreak();
+    const streakDisplay = streak > 0 ? `${streak}🔥` : '0';
+    
+    // Update all streak displays
     const streakEl = document.getElementById('streakCount');
-    if (streakEl) {
-        streakEl.textContent = streak > 0 ? `${streak}🔥` : '0';
-    }
+    const sidebarStreakEl = document.getElementById('sidebarStreak');
+    const mobileStreakEl = document.getElementById('mobileStreak');
+    
+    if (streakEl) streakEl.textContent = streakDisplay;
+    if (sidebarStreakEl) sidebarStreakEl.textContent = streakDisplay;
+    if (mobileStreakEl) mobileStreakEl.textContent = streak > 0 ? '🔥' : '';
 }
 
 function calculateStreak() {
@@ -492,9 +726,29 @@ function calculateStreak() {
 function updateHeaderStats() {
     const currentDay = getCurrentDay();
     const daysLeft = getDaysLeft();
+    const dayStr = `D${String(currentDay).padStart(2, '0')}`;
     
-    document.getElementById('currentDay').textContent = `Day ${currentDay}`;
-    document.getElementById('daysLeft').textContent = daysLeft;
+    // Update main content stats
+    const currentDayEl = document.getElementById('currentDay');
+    const daysLeftEl = document.getElementById('daysLeft');
+    if (currentDayEl) currentDayEl.textContent = `Day ${currentDay}`;
+    if (daysLeftEl) daysLeftEl.textContent = daysLeft;
+    
+    // Update sidebar stats
+    const sidebarDayEl = document.getElementById('sidebarDay');
+    const mobileDayEl = document.getElementById('mobileDay');
+    if (sidebarDayEl) sidebarDayEl.textContent = dayStr;
+    if (mobileDayEl) mobileDayEl.textContent = dayStr;
+    
+    // Update dashboard date
+    const dashDateEl = document.getElementById('dashboardDate');
+    if (dashDateEl) {
+        dashDateEl.textContent = new Date().toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+    }
 }
 
 function updateOverallProgress() {
@@ -1572,13 +1826,8 @@ function closeQuizModal() {
     };
 }
 
-// ===== Analytics Modal =====
-function openAnalyticsModal() {
-    const modal = document.getElementById('analyticsModal');
-    if (!modal) return;
-    
-    const modalBody = document.getElementById('analyticsModalBody');
-    
+// ===== Analytics Rendering =====
+function generateAnalyticsContent() {
     // Calculate stats
     const overallStats = calculateOverallStats();
     const easyAcc = analyticsData.totalByDifficulty.easy > 0 
@@ -1597,7 +1846,7 @@ function openAnalyticsModal() {
         ...calculateSubjectStats(s)
     }));
     
-    modalBody.innerHTML = `
+    return `
         <div class="analytics-grid">
             <div class="analytics-card">
                 <div class="analytics-card-title">📊 Overall Progress</div>
@@ -1646,22 +1895,45 @@ function openAnalyticsModal() {
                 <div class="analytics-subjects">
                     ${subjectProgress.map(s => `
                         <div class="analytics-subject-item">
-                            <span class="subject-name" style="color: ${s.color}">${s.name}</span>
-                            <div class="subject-bar-track">
-                                <div class="subject-bar-fill" style="width: ${s.percentage}%; background: ${s.color}"></div>
+                            <span class="subject-dot" style="background: ${s.color}"></span>
+                            <span class="subject-name">${s.name}</span>
+                            <div class="subject-progress-bar">
+                                <div class="subject-progress-fill" style="width: ${s.percentage}%; background: ${s.color}"></div>
                             </div>
                             <span class="subject-percent">${s.percentage}%</span>
-                            <span class="subject-count">${s.completed}/${s.total}</span>
                         </div>
                     `).join('')}
                 </div>
             </div>
-        </div>
-        
-        <div class="analytics-tip">
-            💡 <strong>Tip:</strong> Focus on improving your ${hardAcc < mediumAcc ? 'hard' : mediumAcc < easyAcc ? 'medium' : 'easy'} question accuracy!
+            
+            <div class="analytics-card">
+                <div class="analytics-card-title">🔥 Current Streak</div>
+                <div class="analytics-stat-big">${calculateStreak()} days</div>
+                <div class="analytics-stat-sub">Keep it up!</div>
+            </div>
+            
+            <div class="analytics-card">
+                <div class="analytics-card-title">📅 Days Remaining</div>
+                <div class="analytics-stat-big">${getDaysLeft()}</div>
+                <div class="analytics-stat-sub">of ${getTotalDays()} total days</div>
+            </div>
         </div>
     `;
+}
+
+function renderAnalytics() {
+    const container = document.getElementById('analyticsContent');
+    if (!container) return;
+    container.innerHTML = generateAnalyticsContent();
+}
+
+// ===== Analytics Modal =====
+function openAnalyticsModal() {
+    const modal = document.getElementById('analyticsModal');
+    if (!modal) return;
+    
+    const modalBody = document.getElementById('analyticsModalBody');
+    modalBody.innerHTML = generateAnalyticsContent();
     
     modal.classList.add('active');
 }
@@ -1671,11 +1943,19 @@ function closeAnalyticsModal() {
 }
 
 function refreshUI() {
+    updateHeaderStats();
     updateOverallProgress();
     updateStreakCounter();
+    updateSidebarStats();
+    updateTodayBadge();
     renderTodaySection();
     renderSubjectCards();
     renderScheduleGrid();
+    
+    // Update dashboard if visible
+    if (currentSection === 'dashboard') {
+        renderDashboard();
+    }
 }
 
 function shuffleArray(array) {
@@ -1706,3 +1986,6 @@ window.openAnalyticsModal = openAnalyticsModal;
 window.closeAnalyticsModal = closeAnalyticsModal;
 window.selectUser = selectUser;
 window.switchUser = switchUser;
+window.navigateTo = navigateTo;
+window.toggleSidebar = toggleSidebar;
+window.closeSidebar = closeSidebar;
