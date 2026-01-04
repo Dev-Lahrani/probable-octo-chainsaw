@@ -43,6 +43,8 @@
     min-height: 100vh;
     background: var(--bg-primary);
     padding: 2rem;
+    position: relative;
+    z-index: 2000;
 }
 
 .user-selection-container {
@@ -91,6 +93,7 @@
     text-align: left;
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
 .user-card::before {
