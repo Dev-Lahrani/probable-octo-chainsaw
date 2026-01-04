@@ -106,7 +106,7 @@ function renderUserSelection() {
     if (!container || !usersData) return;
     
     container.innerHTML = usersData.users.map(user => `
-        <div class="user-card ${user.theme}" onclick="selectUser('${user.id}')">
+        <div class="user-card ${user.theme}" data-user-id="${user.id}">
             <div class="user-card-icon">${user.icon}</div>
             <div class="user-card-info">
                 <h3>${user.name}</h3>
@@ -118,6 +118,18 @@ function renderUserSelection() {
             </div>
         </div>
     `).join('');
+    
+    // Add click event listeners to user cards
+    container.querySelectorAll('.user-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const userId = this.getAttribute('data-user-id');
+            if (userId) {
+                selectUser(userId);
+            }
+        });
+    });
     
     // Load and display progress for each user
     usersData.users.forEach(user => {
