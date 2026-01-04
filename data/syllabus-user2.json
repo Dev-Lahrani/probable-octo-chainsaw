@@ -1,292 +1,78 @@
 {
-  "metadata": {
-    "title": "Medical Studies - 65 Day Journey",
-    "startDate": "2026-01-05",
-    "endDate": "2026-03-10",
-    "totalDays": 65,
-    "hoursPerDay": 4,
-    "bufferDays": 5,
-    "description": "Comprehensive study plan for General Surgery, General Medicine & Oral Pathology"
-  },
-  "subjects": [
-    {
-      "id": "gs",
-      "name": "General Surgery",
-      "shortName": "GS",
-      "color": "#ff6b9d",
-      "totalHours": 60,
-      "priority": "high",
-      "units": [
-        {
-          "id": "gs-u1",
-          "name": "Sterilization & Wounds",
-          "hours": 8,
-          "topics": [
-            {"id": "gs-u1-t1", "name": "History of Surgery", "completed": false, "day": 1},
-            {"id": "gs-u1-t2", "name": "Sterilization - Definition & Classification", "completed": false, "day": 1},
-            {"id": "gs-u1-t3", "name": "Steam Sterilization", "completed": false, "day": 1},
-            {"id": "gs-u1-t4", "name": "Autoclave", "completed": false, "day": 2},
-            {"id": "gs-u1-t5", "name": "Chemical Methods of Sterilization", "completed": false, "day": 2},
-            {"id": "gs-u1-t6", "name": "Disinfection & EUSOL", "completed": false, "day": 2},
-            {"id": "gs-u1-t7", "name": "Phases of Wound Healing", "completed": false, "day": 3},
-            {"id": "gs-u1-t8", "name": "Classification of Wounds", "completed": false, "day": 3},
-            {"id": "gs-u1-t9", "name": "Factors Affecting Wound Healing", "completed": false, "day": 3},
-            {"id": "gs-u1-t10", "name": "Ideal Wound Dressing", "completed": false, "day": 4}
-          ]
-        },
-        {
-          "id": "gs-u2",
-          "name": "Inflammation & Ulcers",
-          "hours": 8,
-          "topics": [
-            {"id": "gs-u2-t1", "name": "Cardinal Signs of Inflammation", "completed": false, "day": 4},
-            {"id": "gs-u2-t2", "name": "Acute vs Chronic Inflammation", "completed": false, "day": 4},
-            {"id": "gs-u2-t3", "name": "Definition & Classification of Ulcers", "completed": false, "day": 5},
-            {"id": "gs-u2-t4", "name": "Parts of Ulcer with Diagram", "completed": false, "day": 5},
-            {"id": "gs-u2-t5", "name": "Trophic Ulcer", "completed": false, "day": 5},
-            {"id": "gs-u2-t6", "name": "Varicose Ulcer", "completed": false, "day": 6},
-            {"id": "gs-u2-t7", "name": "Diabetic Foot Ulcer", "completed": false, "day": 6},
-            {"id": "gs-u2-t8", "name": "Arterial/Ischaemic Ulcers", "completed": false, "day": 6},
-            {"id": "gs-u2-t9", "name": "Rodent Ulcer (BCC)", "completed": false, "day": 7},
-            {"id": "gs-u2-t10", "name": "Keloid vs Hypertrophic Scar", "completed": false, "day": 7}
-          ]
-        },
-        {
-          "id": "gs-u3",
-          "name": "Infectious Diseases",
-          "hours": 10,
-          "topics": [
-            {"id": "gs-u3-t1", "name": "Tetanus - Etiopathology, Clinical Features, Management", "completed": false, "day": 8},
-            {"id": "gs-u3-t2", "name": "Tetanus Prophylaxis", "completed": false, "day": 8},
-            {"id": "gs-u3-t3", "name": "Gas Gangrene - Etiopathology & Treatment", "completed": false, "day": 9},
-            {"id": "gs-u3-t4", "name": "Cold Abscess", "completed": false, "day": 9},
-            {"id": "gs-u3-t5", "name": "Carbuncle", "completed": false, "day": 10},
-            {"id": "gs-u3-t6", "name": "Cellulitis & Erysipelas", "completed": false, "day": 10},
-            {"id": "gs-u3-t7", "name": "Universal Precautions for HIV", "completed": false, "day": 11},
-            {"id": "gs-u3-t8", "name": "Nosocomial Infections", "completed": false, "day": 11},
-            {"id": "gs-u3-t9", "name": "Collar Stud Abscess & Actinomycosis", "completed": false, "day": 12},
-            {"id": "gs-u3-t10", "name": "Hilton's Method of Draining Abscess", "completed": false, "day": 12}
-          ]
-        },
-        {
-          "id": "gs-u4",
-          "name": "Shock & Blood",
-          "hours": 8,
-          "topics": [
-            {"id": "gs-u4-t1", "name": "Definition & Classification of Shock", "completed": false, "day": 13},
-            {"id": "gs-u4-t2", "name": "Hypovolemic Shock", "completed": false, "day": 13},
-            {"id": "gs-u4-t3", "name": "Septic Shock", "completed": false, "day": 14},
-            {"id": "gs-u4-t4", "name": "Classification of Haemorrhage", "completed": false, "day": 14},
-            {"id": "gs-u4-t5", "name": "Methods of Controlling Bleeding", "completed": false, "day": 15},
-            {"id": "gs-u4-t6", "name": "Blood Transfusion - Indications & Methods", "completed": false, "day": 15},
-            {"id": "gs-u4-t7", "name": "Complications of Blood Transfusion", "completed": false, "day": 16},
-            {"id": "gs-u4-t8", "name": "Haemophilia & Factor VIII", "completed": false, "day": 16},
-            {"id": "gs-u4-t9", "name": "Burns - Classification & Rule of Nine", "completed": false, "day": 17},
-            {"id": "gs-u4-t10", "name": "Burns Management & Complications", "completed": false, "day": 17}
-          ]
-        },
-        {
-          "id": "gs-u5",
-          "name": "Vascular Diseases",
-          "hours": 8,
-          "topics": [
-            {"id": "gs-u5-t1", "name": "Buerger's Disease", "completed": false, "day": 18},
-            {"id": "gs-u5-t2", "name": "Chronic Lower Limb Ischemia", "completed": false, "day": 18},
-            {"id": "gs-u5-t3", "name": "Dry vs Wet Gangrene", "completed": false, "day": 19},
-            {"id": "gs-u5-t4", "name": "Embolism - Definition & Management", "completed": false, "day": 19},
-            {"id": "gs-u5-t5", "name": "Varicose Veins - Definition & Tests", "completed": false, "day": 20},
-            {"id": "gs-u5-t6", "name": "CEAP Classification of Varicose Veins", "completed": false, "day": 20},
-            {"id": "gs-u5-t7", "name": "Deep Vein Thrombosis", "completed": false, "day": 21},
-            {"id": "gs-u5-t8", "name": "Cervical Lymphadenopathy", "completed": false, "day": 21},
-            {"id": "gs-u5-t9", "name": "Tubercular Cervical Lymphadenitis", "completed": false, "day": 22},
-            {"id": "gs-u5-t10", "name": "Hodgkin's Lymphoma Staging", "completed": false, "day": 22}
-          ]
-        },
-        {
-          "id": "gs-u6",
-          "name": "Neck & Thyroid",
-          "hours": 10,
-          "topics": [
-            {"id": "gs-u6-t1", "name": "Ludwig's Angina - Clinical Features, Complications, Management", "completed": false, "day": 23},
-            {"id": "gs-u6-t2", "name": "Triangles of Neck with Diagram", "completed": false, "day": 23},
-            {"id": "gs-u6-t3", "name": "Cystic Hygroma", "completed": false, "day": 24},
-            {"id": "gs-u6-t4", "name": "Goitre - Definition & Classification", "completed": false, "day": 24},
-            {"id": "gs-u6-t5", "name": "Multinodular Goitre", "completed": false, "day": 25},
-            {"id": "gs-u6-t6", "name": "Papillary Carcinoma of Thyroid", "completed": false, "day": 25},
-            {"id": "gs-u6-t7", "name": "Solitary Thyroid Nodule", "completed": false, "day": 26},
-            {"id": "gs-u6-t8", "name": "Hyperthyroidism & Grave's Disease", "completed": false, "day": 26},
-            {"id": "gs-u6-t9", "name": "Thyroid Storm", "completed": false, "day": 27},
-            {"id": "gs-u6-t10", "name": "Complications of Thyroidectomy", "completed": false, "day": 27}
-          ]
-        },
-        {
-          "id": "gs-u7",
-          "name": "Salivary Glands",
-          "hours": 6,
-          "topics": [
-            {"id": "gs-u7-t1", "name": "Classification of Parotid Tumours", "completed": false, "day": 28},
-            {"id": "gs-u7-t2", "name": "Pleomorphic Adenoma", "completed": false, "day": 28},
-            {"id": "gs-u7-t3", "name": "Warthin's Tumour", "completed": false, "day": 29},
-            {"id": "gs-u7-t4", "name": "Parotid Abscess & Acute Parotitis", "completed": false, "day": 29},
-            {"id": "gs-u7-t5", "name": "Superficial Parotidectomy", "completed": false, "day": 30},
-            {"id": "gs-u7-t6", "name": "Submandibular Gland Stones", "completed": false, "day": 30}
-          ]
-        },
-        {
-          "id": "gs-u8",
-          "name": "Oral Cavity & Jaw",
-          "hours": 10,
-          "topics": [
-            {"id": "gs-u8-t1", "name": "Carcinoma Anterior 2/3 Tongue", "completed": false, "day": 31},
-            {"id": "gs-u8-t2", "name": "TNM Classification in Oral Cancer", "completed": false, "day": 31},
-            {"id": "gs-u8-t3", "name": "Premalignant Lesions of Oral Cavity", "completed": false, "day": 32},
-            {"id": "gs-u8-t4", "name": "Ranula & Trismus", "completed": false, "day": 32},
-            {"id": "gs-u8-t5", "name": "Submucous Fibrosis & Leucoplakia", "completed": false, "day": 33},
-            {"id": "gs-u8-t6", "name": "Epulis & Dentigerous Cyst", "completed": false, "day": 33},
-            {"id": "gs-u8-t7", "name": "Ameloblastoma", "completed": false, "day": 34},
-            {"id": "gs-u8-t8", "name": "Cleft Lip & Cleft Palate", "completed": false, "day": 34},
-            {"id": "gs-u8-t9", "name": "Fracture Mandible", "completed": false, "day": 35},
-            {"id": "gs-u8-t10", "name": "Tracheostomy", "completed": false, "day": 35}
-          ]
-        }
-      ]
+    "metadata": {
+        "title": "Medical Studies Syllabus",
+        "totalDays": 65,
+        "startDate": "2026-01-05"
     },
-    {
-      "id": "gm",
-      "name": "General Medicine",
-      "shortName": "GM",
-      "color": "#00d4ff",
-      "totalHours": 50,
-      "priority": "high",
-      "units": [
+    "subjects": [
         {
-          "id": "gm-u1",
-          "name": "GI & Hepatobiliary",
-          "hours": 8,
-          "topics": [
-            {"id": "gm-u1-t1", "name": "Cirrhosis of Liver", "completed": false, "day": 36},
-            {"id": "gm-u1-t2", "name": "Chronic Hepatitis & Viral Hepatitis", "completed": false, "day": 36},
-            {"id": "gm-u1-t3", "name": "Approach to Jaundice", "completed": false, "day": 37},
-            {"id": "gm-u1-t4", "name": "Portal Hypertension & Ascites", "completed": false, "day": 37},
-            {"id": "gm-u1-t5", "name": "Dysphagia & Stomatitis", "completed": false, "day": 38},
-            {"id": "gm-u1-t6", "name": "Acid Peptic Disease & GERD", "completed": false, "day": 38},
-            {"id": "gm-u1-t7", "name": "Chronic Diarrhoea", "completed": false, "day": 39}
-          ]
+            "id": "gs",
+            "name": "General Surgery",
+            "shortName": "GS",
+            "color": "#ff6b9d",
+            "units": [
+                {
+                    "id": "gs1",
+                    "name": "Basic Surgical Principles",
+                    "topics": [
+                        {"id": "gs_t1", "title": "Wound Healing", "day": 1, "subtopics": ["Phases", "Factors affecting", "Complications"]},
+                        {"id": "gs_t2", "title": "Surgical Infections", "day": 2, "subtopics": ["Types", "Prevention", "Treatment"]},
+                        {"id": "gs_t3", "title": "Shock Management", "day": 3, "subtopics": ["Classification", "Clinical features", "Treatment"]}
+                    ]
+                },
+                {
+                    "id": "gs2",
+                    "name": "Gastrointestinal Surgery",
+                    "topics": [
+                        {"id": "gs_t4", "title": "Appendicitis", "day": 4, "subtopics": ["Diagnosis", "Surgery", "Complications"]},
+                        {"id": "gs_t5", "title": "Hernia Types", "day": 5, "subtopics": ["Inguinal", "Femoral", "Umbilical"]},
+                        {"id": "gs_t6", "title": "Intestinal Obstruction", "day": 6, "subtopics": ["Causes", "Diagnosis", "Management"]}
+                    ]
+                }
+            ]
         },
         {
-          "id": "gm-u2",
-          "name": "Haematology",
-          "hours": 8,
-          "topics": [
-            {"id": "gm-u2-t1", "name": "Classification of Anaemia", "completed": false, "day": 39},
-            {"id": "gm-u2-t2", "name": "Iron Deficiency Anaemia", "completed": false, "day": 40},
-            {"id": "gm-u2-t3", "name": "Megaloblastic Anaemia", "completed": false, "day": 40},
-            {"id": "gm-u2-t4", "name": "Hodgkin's Lymphoma", "completed": false, "day": 41},
-            {"id": "gm-u2-t5", "name": "Acute Myeloid Leukaemia", "completed": false, "day": 41},
-            {"id": "gm-u2-t6", "name": "DIC & ITP", "completed": false, "day": 42},
-            {"id": "gm-u2-t7", "name": "Oral Manifestations of Haematological Disorders", "completed": false, "day": 42}
-          ]
+            "id": "gm",
+            "name": "General Medicine",
+            "shortName": "GM",
+            "color": "#00d4ff",
+            "units": [
+                {
+                    "id": "gm1",
+                    "name": "Cardiovascular",
+                    "topics": [
+                        {"id": "gm_t1", "title": "Hypertension", "day": 7, "subtopics": ["Classification", "Treatment", "Complications"]},
+                        {"id": "gm_t2", "title": "Heart Failure", "day": 8, "subtopics": ["Types", "Diagnosis", "Management"]},
+                        {"id": "gm_t3", "title": "Myocardial Infarction", "day": 9, "subtopics": ["Pathophysiology", "ECG changes", "Treatment"]}
+                    ]
+                },
+                {
+                    "id": "gm2",
+                    "name": "Respiratory",
+                    "topics": [
+                        {"id": "gm_t4", "title": "Pneumonia", "day": 10, "subtopics": ["Types", "Diagnosis", "Treatment"]},
+                        {"id": "gm_t5", "title": "COPD", "day": 11, "subtopics": ["Pathology", "Staging", "Management"]},
+                        {"id": "gm_t6", "title": "Asthma", "day": 12, "subtopics": ["Triggers", "Classification", "Treatment"]}
+                    ]
+                }
+            ]
         },
         {
-          "id": "gm-u3",
-          "name": "Cardiovascular System",
-          "hours": 10,
-          "topics": [
-            {"id": "gm-u3-t1", "name": "Acute Myocardial Infarction", "completed": false, "day": 43},
-            {"id": "gm-u3-t2", "name": "Ischaemic Heart Disease", "completed": false, "day": 43},
-            {"id": "gm-u3-t3", "name": "CCF - Clinical Features & Management", "completed": false, "day": 44},
-            {"id": "gm-u3-t4", "name": "Acute Rheumatic Fever & Jones Criteria", "completed": false, "day": 44},
-            {"id": "gm-u3-t5", "name": "Infective Endocarditis", "completed": false, "day": 45},
-            {"id": "gm-u3-t6", "name": "Hypertension & Complications", "completed": false, "day": 45},
-            {"id": "gm-u3-t7", "name": "Atrial Fibrillation & Syncope", "completed": false, "day": 46},
-            {"id": "gm-u3-t8", "name": "ACE Inhibitors, Beta Blockers, CCBs", "completed": false, "day": 46}
-          ]
-        },
-        {
-          "id": "gm-u4",
-          "name": "Respiratory System",
-          "hours": 8,
-          "topics": [
-            {"id": "gm-u4-t1", "name": "Community Acquired Pneumonia", "completed": false, "day": 47},
-            {"id": "gm-u4-t2", "name": "Pulmonary Tuberculosis & DOTS", "completed": false, "day": 47},
-            {"id": "gm-u4-t3", "name": "Bronchial Asthma", "completed": false, "day": 48},
-            {"id": "gm-u4-t4", "name": "COPD - Clinical Features & Management", "completed": false, "day": 48},
-            {"id": "gm-u4-t5", "name": "Lung Abscess & Bronchiectasis", "completed": false, "day": 49},
-            {"id": "gm-u4-t6", "name": "Pleural Effusion & Pneumothorax", "completed": false, "day": 49}
-          ]
-        },
-        {
-          "id": "gm-u5",
-          "name": "Renal & Nervous System",
-          "hours": 8,
-          "topics": [
-            {"id": "gm-u5-t1", "name": "Nephrotic Syndrome", "completed": false, "day": 50},
-            {"id": "gm-u5-t2", "name": "Acute Nephritic Syndrome", "completed": false, "day": 50},
-            {"id": "gm-u5-t3", "name": "CKD - Clinical Features", "completed": false, "day": 51},
-            {"id": "gm-u5-t4", "name": "Tuberculous Meningitis", "completed": false, "day": 51},
-            {"id": "gm-u5-t5", "name": "Migraine & Headache", "completed": false, "day": 52},
-            {"id": "gm-u5-t6", "name": "Epilepsy & Status Epilepticus", "completed": false, "day": 52},
-            {"id": "gm-u5-t7", "name": "Bell's Palsy", "completed": false, "day": 53},
-            {"id": "gm-u5-t8", "name": "Trigeminal Neuralgia", "completed": false, "day": 53}
-          ]
-        },
-        {
-          "id": "gm-u6",
-          "name": "Endocrine & Infections",
-          "hours": 10,
-          "topics": [
-            {"id": "gm-u6-t1", "name": "Hypothyroidism", "completed": false, "day": 54},
-            {"id": "gm-u6-t2", "name": "Diabetes Mellitus - Classification & Complications", "completed": false, "day": 54},
-            {"id": "gm-u6-t3", "name": "Oral Hypoglycaemic Drugs & Insulin", "completed": false, "day": 55},
-            {"id": "gm-u6-t4", "name": "Hypercalcemia & Acromegaly", "completed": false, "day": 55},
-            {"id": "gm-u6-t5", "name": "Enteric Fever", "completed": false, "day": 56},
-            {"id": "gm-u6-t6", "name": "AIDS & Oral Manifestations of HIV", "completed": false, "day": 56},
-            {"id": "gm-u6-t7", "name": "Herpes Zoster & Chicken Pox", "completed": false, "day": 57},
-            {"id": "gm-u6-t8", "name": "Malaria & Syphilis", "completed": false, "day": 57},
-            {"id": "gm-u6-t9", "name": "Anaphylactic Shock & CPR", "completed": false, "day": 58},
-            {"id": "gm-u6-t10", "name": "PEM - Kwashiorkor & Marasmus", "completed": false, "day": 58}
-          ]
+            "id": "op",
+            "name": "Oral Pathology",
+            "shortName": "OP",
+            "color": "#00ff88",
+            "units": [
+                {
+                    "id": "op1",
+                    "name": "Oral Lesions",
+                    "topics": [
+                        {"id": "op_t1", "title": "Leukoplakia", "day": 13, "subtopics": ["Types", "Histology", "Management"]},
+                        {"id": "op_t2", "title": "Oral Cancer", "day": 14, "subtopics": ["Risk factors", "Staging", "Treatment"]},
+                        {"id": "op_t3", "title": "Oral Infections", "day": 15, "subtopics": ["Bacterial", "Viral", "Fungal"]}
+                    ]
+                }
+            ]
         }
-      ]
-    },
-    {
-      "id": "op",
-      "name": "Oral Pathology",
-      "shortName": "OP",
-      "color": "#00ff88",
-      "totalHours": 30,
-      "priority": "high",
-      "units": [
-        {
-          "id": "op-u1",
-          "name": "Developmental & Cysts",
-          "hours": 8,
-          "topics": [
-            {"id": "op-u1-t1", "name": "Developmental Disturbances of Teeth", "completed": false, "day": 59},
-            {"id": "op-u1-t2", "name": "Amelogenesis Imperfecta", "completed": false, "day": 59},
-            {"id": "op-u1-t3", "name": "Dentinogenesis Imperfecta", "completed": false, "day": 60},
-            {"id": "op-u1-t4", "name": "Classification of Odontogenic Cysts", "completed": false, "day": 60},
-            {"id": "op-u1-t5", "name": "Odontogenic Keratocyst", "completed": false, "day": 61},
-            {"id": "op-u1-t6", "name": "Dentigerous Cyst", "completed": false, "day": 61},
-            {"id": "op-u1-t7", "name": "Radicular Cyst", "completed": false, "day": 62}
-          ]
-        },
-        {
-          "id": "op-u2",
-          "name": "Tumours & Neoplasms",
-          "hours": 8,
-          "topics": [
-            {"id": "op-u2-t1", "name": "Classification of Odontogenic Tumours", "completed": false, "day": 62},
-            {"id": "op-u2-t2", "name": "Ameloblastoma - Histopathology", "completed": false, "day": 63},
-            {"id": "op-u2-t3", "name": "Pindborg's Tumour (CEOT)", "completed": false, "day": 63},
-            {"id": "op-u2-t4", "name": "Adenomatoid Odontogenic Tumour", "completed": false, "day": 64},
-            {"id": "op-u2-t5", "name": "Oral Potentially Malignant Disorders", "completed": false, "day": 64},
-            {"id": "op-u2-t6", "name": "Leukoplakia - Histopathology", "completed": false, "day": 65},
-            {"id": "op-u2-t7", "name": "Oral Submucous Fibrosis", "completed": false, "day": 65},
-            {"id": "op-u2-t8", "name": "Oral Squamous Cell Carcinoma", "completed": false, "day": 65}
-          ]
-        }
-      ]
-    }
-  ]
+    ]
 }

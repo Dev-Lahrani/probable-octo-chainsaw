@@ -4,366 +4,215 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0a0a0f">
-    <meta name="description" content="100-Day Syllabus Tracker - Track your college syllabus completion">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SYLLABUS // 100 DAYS</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="apple-touch-icon" href="favicon.svg">
+    <title>Syllabus Tracker</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- User Selection Landing Page -->
+    <!-- User Selection Page -->
     <div class="user-selection-page" id="userSelectionPage">
         <div class="user-selection-container">
             <div class="user-selection-header">
-                <span class="logo-icon">◈</span>
+                <div class="logo-icon">◈</div>
                 <h1>SYLLABUS TRACKER</h1>
-                <p class="user-selection-subtitle">Select your study profile to continue</p>
+                <p>Select your study profile to continue</p>
             </div>
-            <div class="user-cards-grid" id="userCardsGrid">
-                <!-- User cards rendered dynamically -->
-            </div>
-            <div class="user-selection-footer">
-                <p>Each profile tracks progress independently</p>
-            </div>
+            <div class="user-cards-grid" id="userCardsGrid"></div>
         </div>
     </div>
 
-    <!-- Main App Container (hidden until user selected) -->
-    <div class="main-app" id="mainApp" style="display: none;">
-        
+    <!-- Main App -->
+    <div class="app-container" id="mainApp" style="display: none;">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
                     <span class="logo-icon">◈</span>
-                    <span class="sidebar-title">SYLLABUS</span>
+                    <span class="logo-text">SYLLABUS</span>
                 </div>
-                <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle Sidebar">
-                    <span class="toggle-icon">◀</span>
-                </button>
+                <button class="sidebar-toggle" id="sidebarToggle">◀</button>
             </div>
-            
-            <div class="sidebar-user" onclick="switchUser()">
-                <span class="user-icon" id="sidebarUserIcon">💻</span>
-                <span class="user-name" id="sidebarUserName">DSA Mastery</span>
-                <span class="user-switch">⇄</span>
+
+            <div class="sidebar-user" id="sidebarUser">
+                <span class="user-icon" id="currentUserIcon">💻</span>
+                <span class="user-name" id="currentUserName">User</span>
+                <button class="switch-btn" id="switchUserBtn">Switch</button>
             </div>
-            
+
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-section="dashboard" onclick="navigateTo('dashboard', event)">
+                <a href="#" class="nav-item active" data-section="dashboard">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a href="#" class="nav-item" data-section="today" onclick="navigateTo('today', event)">
+                <a href="#" class="nav-item" data-section="today">
                     <span class="nav-icon">📅</span>
                     <span class="nav-text">Today</span>
                     <span class="nav-badge" id="todayBadge">0</span>
                 </a>
-                <a href="#" class="nav-item" data-section="subjects" onclick="navigateTo('subjects', event)">
+                <a href="#" class="nav-item" data-section="subjects">
                     <span class="nav-icon">📚</span>
                     <span class="nav-text">Subjects</span>
                 </a>
-                <a href="#" class="nav-item" data-section="schedule" onclick="navigateTo('schedule', event)">
+                <a href="#" class="nav-item" data-section="schedule">
                     <span class="nav-icon">📆</span>
-                    <span class="nav-text">Schedule Grid</span>
+                    <span class="nav-text">Schedule</span>
                 </a>
-                <a href="#" class="nav-item" data-section="analytics" onclick="navigateTo('analytics', event)">
+                <a href="#" class="nav-item" data-section="analytics">
                     <span class="nav-icon">📈</span>
                     <span class="nav-text">Analytics</span>
                 </a>
-                <a href="#" class="nav-item" data-section="settings" onclick="navigateTo('settings', event)">
+                <a href="#" class="nav-item" data-section="settings">
                     <span class="nav-icon">⚙️</span>
                     <span class="nav-text">Settings</span>
                 </a>
             </nav>
-            
-            <div class="sidebar-divider"></div>
-            
-            <div class="sidebar-section-title">Quick Actions</div>
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item" onclick="document.getElementById('syncNowBtn').click(); return false;">
-                    <span class="nav-icon">☁️</span>
-                    <span class="nav-text">Sync Now</span>
-                </a>
-                <a href="#" class="nav-item" onclick="exportProgress(); return false;">
-                    <span class="nav-icon">📤</span>
-                    <span class="nav-text">Export</span>
-                </a>
-                <a href="#" class="nav-item" onclick="document.getElementById('helpModal').classList.add('active'); return false;">
-                    <span class="nav-icon">❓</span>
-                    <span class="nav-text">Help</span>
-                </a>
-            </nav>
-            
+
             <div class="sidebar-footer">
                 <div class="sidebar-stats">
-                    <div class="sidebar-stat">
+                    <div class="stat">
                         <span class="stat-value" id="sidebarDay">D01</span>
                         <span class="stat-label">Day</span>
                     </div>
-                    <div class="sidebar-stat">
-                        <span class="stat-value" id="sidebarStreak">0🔥</span>
-                        <span class="stat-label">Streak</span>
+                    <div class="stat">
+                        <span class="stat-value" id="sidebarProgress">0%</span>
+                        <span class="stat-label">Done</span>
                     </div>
-                </div>
-                <div class="sync-status sidebar-sync">
-                    <span class="sync-indicator" id="syncIndicator"></span>
-                    <span id="syncText">Local</span>
                 </div>
             </div>
         </aside>
-        
-        <!-- Mobile Sidebar Overlay -->
-        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-        
+
         <!-- Mobile Header -->
         <header class="mobile-header" id="mobileHeader">
-            <button class="mobile-menu-btn" onclick="toggleSidebar()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="mobile-logo">
-                <span class="logo-icon">◈</span>
-                <span>SYLLABUS</span>
-            </div>
-            <div class="mobile-stats">
-                <span id="mobileDay">D01</span>
-                <span id="mobileStreak">🔥</span>
-            </div>
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <span class="mobile-title">SYLLABUS</span>
+            <span class="mobile-day" id="mobileDay">D01</span>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            
             <!-- Dashboard Section -->
-            <section class="content-section active" id="sectionDashboard">
+            <section class="content-section active" id="dashboardSection">
                 <div class="section-header">
                     <h1>Dashboard</h1>
-                    <span class="section-date" id="dashboardDate"></span>
+                    <span class="current-date" id="currentDate"></span>
                 </div>
-                
-                <!-- Progress Overview -->
                 <div class="dashboard-grid">
                     <div class="dashboard-card progress-card">
-                        <div class="card-header">
-                            <h3>Overall Progress</h3>
-                            <span class="progress-percentage" id="overallPercentage">0%</span>
+                        <h3>Overall Progress</h3>
+                        <div class="progress-circle" id="progressCircle">
+                            <span class="progress-value" id="progressValue">0%</span>
                         </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" id="overallProgressBar"></div>
-                        </div>
-                        <div class="progress-stats">
-                            <span><span id="completedTopics">0</span>/<span id="totalTopics">0</span> topics</span>
-                            <span id="estimatedCompletion"></span>
+                        <div class="progress-details">
+                            <span><span id="completedCount">0</span>/<span id="totalCount">0</span> topics</span>
                         </div>
                     </div>
-                    
                     <div class="dashboard-card stats-card">
-                        <div class="stats-grid">
-                            <div class="stat-box">
-                                <span class="stat-number" id="currentDay">D01</span>
-                                <span class="stat-desc">Current Day</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number" id="daysLeft">100</span>
-                                <span class="stat-desc">Days Left</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number" id="streakCount">0🔥</span>
-                                <span class="stat-desc">Streak</span>
-                            </div>
-                            <div class="stat-box clickable" onclick="openAnalyticsModal()">
-                                <span class="stat-number">📊</span>
-                                <span class="stat-desc">Analytics</span>
-                            </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="currentDayNum">1</span>
+                            <span class="stat-label">Current Day</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="daysLeft">100</span>
+                            <span class="stat-label">Days Left</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="streakCount">0</span>
+                            <span class="stat-label">Day Streak</span>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Today's Preview in Dashboard -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <h3>Today's Focus</h3>
-                        <a href="#" class="card-link" onclick="navigateTo('today', event)">View All →</a>
+                        <a href="#" class="view-all" data-section="today">View All →</a>
                     </div>
                     <div class="today-preview" id="todayPreview"></div>
                 </div>
-                
-                <!-- Subjects Preview -->
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <h3>Subjects Overview</h3>
-                        <a href="#" class="card-link" onclick="navigateTo('subjects', event)">View All →</a>
-                    </div>
-                    <div class="subjects-preview" id="subjectsPreview"></div>
-                </div>
             </section>
-            
+
             <!-- Today Section -->
-            <section class="content-section" id="sectionToday">
+            <section class="content-section" id="todaySection">
                 <div class="section-header">
-                    <h1>Today's Focus</h1>
+                    <h1>Today's Topics</h1>
                     <span class="today-date" id="todayDate"></span>
                 </div>
                 <div class="today-topics" id="todayTopics"></div>
             </section>
-            
+
             <!-- Subjects Section -->
-            <section class="content-section" id="sectionSubjects">
+            <section class="content-section" id="subjectsSection">
                 <div class="section-header">
                     <h1>Subjects</h1>
-                    <div class="section-filters">
-                        <select id="subjectFilter" class="filter-select">
-                            <option value="all">All Subjects</option>
-                        </select>
-                        <select id="dayFilter" class="filter-select">
-                            <option value="all">All Days</option>
-                            <option value="today">Today</option>
-                            <option value="week">This Week</option>
-                            <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                        <select id="priorityFilter" class="filter-select">
-                            <option value="all">All Priority</option>
-                            <option value="high">High</option>
-                            <option value="medium">Medium</option>
-                            <option value="low">Low</option>
-                        </select>
-                    </div>
                 </div>
-                <div class="subject-cards" id="subjectCards"></div>
+                <div class="subjects-grid" id="subjectsGrid"></div>
             </section>
-            
+
             <!-- Schedule Section -->
-            <section class="content-section" id="sectionSchedule">
+            <section class="content-section" id="scheduleSection">
                 <div class="section-header">
                     <h1>Schedule Grid</h1>
-                    <div class="schedule-legend">
-                        <span class="legend-item"><span class="legend-color completed"></span> Done</span>
-                        <span class="legend-item"><span class="legend-color current"></span> Today</span>
-                        <span class="legend-item"><span class="legend-color buffer"></span> Buffer</span>
-                        <span class="legend-item"><span class="legend-color pending"></span> Pending</span>
-                    </div>
                 </div>
                 <div class="schedule-grid" id="scheduleGrid"></div>
             </section>
-            
+
             <!-- Analytics Section -->
-            <section class="content-section" id="sectionAnalytics">
+            <section class="content-section" id="analyticsSection">
                 <div class="section-header">
-                    <h1>Performance Analytics</h1>
+                    <h1>Analytics</h1>
                 </div>
-                <div id="analyticsContent"></div>
+                <div class="analytics-content" id="analyticsContent"></div>
             </section>
-            
-            <!-- Settings Section (Cloud Sync) -->
-            <section class="content-section" id="sectionSettings">
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settingsSection">
                 <div class="section-header">
-                    <h1>Settings & Sync</h1>
+                    <h1>Settings</h1>
                 </div>
-                <div class="settings-card">
-                    <h3>☁️ Cloud Sync (Cross-Device)</h3>
-                    <p class="settings-desc">Sync your progress across multiple devices using cloud storage.</p>
-                    <div class="sync-controls">
-                        <input type="text" id="binIdInput" class="sync-input" placeholder="Paste Bin ID to sync across devices">
-                        <div class="sync-buttons">
-                            <button class="btn" id="connectBinBtn">Connect</button>
+                <div class="settings-content">
+                    <div class="settings-card">
+                        <h3>Cloud Sync</h3>
+                        <p>Sync your progress across devices</p>
+                        <input type="text" id="binIdInput" placeholder="Paste Bin ID here">
+                        <div class="settings-buttons">
+                            <button class="btn" id="connectBtn">Connect</button>
                             <button class="btn btn-primary" id="createBinBtn">Create New</button>
-                            <button class="btn" id="syncNowBtn">Sync Now</button>
+                            <button class="btn" id="syncBtn">Sync Now</button>
                         </div>
                     </div>
-                </div>
-                <div class="settings-card">
-                    <h3>📁 Import / Export</h3>
-                    <p class="settings-desc">Backup your progress or restore from a previous backup.</p>
-                    <div class="sync-buttons">
-                        <button class="btn" id="exportBtn">↓ Export Data</button>
-                        <label class="btn" style="cursor:pointer">↑ Import Data<input type="file" id="importFile" accept=".json" style="display:none"></label>
+                    <div class="settings-card danger">
+                        <h3>Reset Progress</h3>
+                        <p>Clear all progress for this profile</p>
+                        <button class="btn btn-danger" id="resetBtn">Reset All</button>
                     </div>
                 </div>
-                <div class="settings-card danger">
-                    <h3>⚠️ Danger Zone</h3>
-                    <p class="settings-desc">Reset all progress for this profile. This cannot be undone.</p>
-                    <button class="btn btn-danger" id="resetProgress">Reset All Progress</button>
-                </div>
             </section>
-
         </main>
-        
-        <!-- Subject Modal -->
-        <div class="modal" id="subjectModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modalTitle">Subject</h2>
-                    <button class="modal-close" id="modalClose">×</button>
-                </div>
-                <div class="modal-body" id="modalBody"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Keyboard shortcuts modal -->
-    <div class="modal" id="helpModal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h2>Keyboard Shortcuts</h2>
-                <button class="modal-close" onclick="document.getElementById('helpModal').classList.remove('active')">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="display:grid;gap:0.5rem;">
-                    <div style="display:flex;justify-content:space-between;"><kbd>Esc</kbd> <span>Close modal</span></div>
-                    <div style="display:flex;justify-content:space-between;"><kbd>?</kbd> <span>Show this help</span></div>
-                    <div style="display:flex;justify-content:space-between;"><kbd>S</kbd> <span>Sync now</span></div>
-                    <div style="display:flex;justify-content:space-between;"><kbd>E</kbd> <span>Export data</span></div>
-                    <div style="display:flex;justify-content:space-between;"><kbd>A</kbd> <span>Open analytics</span></div>
-                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">During Quiz:</div>
-                    <div style="display:flex;justify-content:space-between;"><kbd>1-4</kbd> <span>Select answer</span></div>
-                    <div style="display:flex;justify-content:space-between;"><kbd>Enter</kbd> <span>Submit answer</span></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Quiz Modal -->
     <div class="modal" id="quizModal">
-        <div class="modal-content quiz-modal-content">
+        <div class="modal-content">
             <div class="modal-header">
-                <h2 id="quizModalTitle">Topic Quiz</h2>
-                <button class="modal-close" id="quizModalClose">×</button>
+                <h2 id="quizTitle">Topic Quiz</h2>
+                <button class="modal-close" id="closeQuiz">&times;</button>
             </div>
-            <div class="modal-body" id="quizModalBody">
-                <!-- Quiz content rendered dynamically -->
-            </div>
+            <div class="modal-body" id="quizBody"></div>
         </div>
     </div>
 
-    <!-- Topic Details Modal -->
-    <div class="modal" id="topicModal">
-        <div class="modal-content topic-modal-content">
+    <!-- Subject Modal -->
+    <div class="modal" id="subjectModal">
+        <div class="modal-content modal-large">
             <div class="modal-header">
-                <h2 id="topicModalTitle">Topic Details</h2>
-                <button class="modal-close" id="topicModalClose">×</button>
+                <h2 id="subjectTitle">Subject</h2>
+                <button class="modal-close" id="closeSubject">&times;</button>
             </div>
-            <div class="modal-body" id="topicModalBody">
-                <!-- Topic details rendered dynamically -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Analytics Modal -->
-    <div class="modal" id="analyticsModal">
-        <div class="modal-content analytics-modal-content">
-            <div class="modal-header">
-                <h2>📊 Performance Analytics</h2>
-                <button class="modal-close" onclick="closeAnalyticsModal()">×</button>
-            </div>
-            <div class="modal-body" id="analyticsModalBody">
-                <!-- Analytics rendered dynamically -->
-            </div>
+            <div class="modal-body" id="subjectBody"></div>
         </div>
     </div>
 
