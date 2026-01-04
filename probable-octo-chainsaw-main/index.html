@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="description" content="100-Day Syllabus Tracker - Track your college syllabus completion">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SYLLABUS // 100 DAYS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">◈</span>
+                    <h1>SYLLABUS TRACKER</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="currentDay">D01</span>
+                        <span class="stat-label">Current</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="daysLeft">100</span>
+                        <span class="stat-label">Left</span>
+                    </div>
+                    <div class="stat-item streak">
+                        <span class="stat-value" id="streakCount">0🔥</span>
+                        <span class="stat-label">Streak</span>
+                    </div>
+                    <div class="stat-item analytics-btn" onclick="openAnalyticsModal()" title="View Analytics (A)">
+                        <span class="stat-value">📊</span>
+                        <span class="stat-label">Stats</span>
+                    </div>
+                    <div class="sync-status">
+                        <span class="sync-indicator" id="syncIndicator"></span>
+                        <span id="syncText">Local</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Overview -->
+    <section class="progress-section">
+        <div class="container">
+            <div class="overall-progress">
+                <div class="progress-header">
+                    <h2>OVERALL PROGRESS</h2>
+                    <span class="progress-percentage" id="overallPercentage">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="overallProgressBar"></div>
+                </div>
+                <div class="progress-stats">
+                    <span><span id="completedTopics">0</span>/<span id="totalTopics">0</span> completed</span>
+                    <span id="estimatedCompletion"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters and Controls -->
+    <section class="controls-section">
+        <div class="container">
+            <div class="controls-wrapper">
+                <div class="filter-group">
+                    <label>Subject</label>
+                    <select id="subjectFilter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>View</label>
+                    <select id="dayFilter">
+                        <option value="all">All Days</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Priority</label>
+                    <select id="priorityFilter">
+                        <option value="all">All</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button class="btn btn-danger" id="resetProgress">Reset</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cloud Sync Section -->
+    <section class="controls-section">
+        <div class="container">
+            <div class="sync-section">
+                <h3>☁ Cloud Sync (Cross-Device)</h3>
+                <div class="sync-controls">
+                    <input type="text" id="binIdInput" class="sync-input" placeholder="Paste Bin ID to sync across devices">
+                    <button class="btn" id="connectBinBtn">Connect</button>
+                    <button class="btn btn-primary" id="createBinBtn">Create New</button>
+                    <button class="btn" id="syncNowBtn">Sync Now</button>
+                    <button class="btn" id="exportBtn">↓ Export</button>
+                    <label class="btn" style="cursor:pointer">↑ Import<input type="file" id="importFile" accept=".json" style="display:none"></label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Today's Focus -->
+    <section class="today-section" id="todaySection">
+        <div class="container">
+            <h2>TODAY <span class="today-date" id="todayDate"></span></h2>
+            <div class="today-topics" id="todayTopics"></div>
+        </div>
+    </section>
+
+    <!-- Subject Cards -->
+    <section class="subjects-section">
+        <div class="container">
+            <h2>SUBJECTS</h2>
+            <div class="subject-cards" id="subjectCards"></div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="subjectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Subject</h2>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Schedule Grid -->
+    <section class="schedule-section">
+        <div class="container">
+            <h2>100-DAY GRID</h2>
+            <div class="schedule-legend">
+                <span class="legend-item"><span class="legend-color completed"></span> Done</span>
+                <span class="legend-item"><span class="legend-color current"></span> Today</span>
+                <span class="legend-item"><span class="legend-color buffer"></span> Buffer</span>
+                <span class="legend-item"><span class="legend-color pending"></span> Pending</span>
+            </div>
+            <div class="schedule-grid" id="scheduleGrid"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Stay consistent. Stay focused.</p>
+            <p class="footer-note">Progress syncs to cloud when connected. • <kbd>Esc</kbd> close modal • <kbd>?</kbd> keyboard help</p>
+        </div>
+    </footer>
+
+    <!-- Keyboard shortcuts modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Keyboard Shortcuts</h2>
+                <button class="modal-close" onclick="document.getElementById('helpModal').classList.remove('active')">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:grid;gap:0.5rem;">
+                    <div style="display:flex;justify-content:space-between;"><kbd>Esc</kbd> <span>Close modal</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>?</kbd> <span>Show this help</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>S</kbd> <span>Sync now</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>E</kbd> <span>Export data</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>A</kbd> <span>Open analytics</span></div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">During Quiz:</div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>1-4</kbd> <span>Select answer</span></div>
+                    <div style="display:flex;justify-content:space-between;"><kbd>Enter</kbd> <span>Submit answer</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div class="modal" id="quizModal">
+        <div class="modal-content quiz-modal-content">
+            <div class="modal-header">
+                <h2 id="quizModalTitle">Topic Quiz</h2>
+                <button class="modal-close" id="quizModalClose">×</button>
+            </div>
+            <div class="modal-body" id="quizModalBody">
+                <!-- Quiz content rendered dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic Details Modal -->
+    <div class="modal" id="topicModal">
+        <div class="modal-content topic-modal-content">
+            <div class="modal-header">
+                <h2 id="topicModalTitle">Topic Details</h2>
+                <button class="modal-close" id="topicModalClose">×</button>
+            </div>
+            <div class="modal-body" id="topicModalBody">
+                <!-- Topic details rendered dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div class="modal" id="analyticsModal">
+        <div class="modal-content analytics-modal-content">
+            <div class="modal-header">
+                <h2>📊 Performance Analytics</h2>
+                <button class="modal-close" onclick="closeAnalyticsModal()">×</button>
+            </div>
+            <div class="modal-body" id="analyticsModalBody">
+                <!-- Analytics rendered dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

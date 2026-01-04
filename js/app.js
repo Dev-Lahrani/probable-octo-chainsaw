@@ -201,6 +201,8 @@ function closeSidebar() {
 
 // ===== Dashboard =====
 function renderDashboard() {
+    if (!currentUser || !syllabusData) return;
+    
     const stats = getOverallStats();
     const today = getCurrentDay();
     const daysLeft = Math.max(0, currentUser.totalDays - today);
@@ -254,6 +256,8 @@ function renderTodayPreview() {
 
 // ===== Today Section =====
 function renderToday() {
+    if (!syllabusData) return;
+    
     const container = document.getElementById('todayTopics');
     const topics = getTodayTopics();
     const day = getCurrentDay();
@@ -286,6 +290,8 @@ function renderToday() {
 
 // ===== Subjects Section =====
 function renderSubjects() {
+    if (!syllabusData) return;
+    
     const container = document.getElementById('subjectsGrid');
     
     container.innerHTML = syllabusData.subjects.map(subject => {
