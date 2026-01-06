@@ -278,9 +278,11 @@ function updateSyncUI() {
 // ===== Calculate Current Day =====
 function getCurrentDay() {
     const today = new Date();
-    const startDate = new Date(syllabusData.metadata.startDate);
+    today.setHours(0, 0, 0, 0); // Normalize to midnight local time
+    const startDate = new Date(syllabusData.metadata.startDate + 'T00:00:00'); // Parse as local time
+    startDate.setHours(0, 0, 0, 0);
     const diffTime = today - startDate;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 because Day 1 is the start date
     return Math.max(1, Math.min(diffDays, 100));
 }
 
